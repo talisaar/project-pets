@@ -42,7 +42,7 @@
     <button type='submit' value='Submit' id='submit-Info'>Submit</button>
   </div>
   <div id="search-results">Search Results</div>
-  <script>
+<!--   <script>
     var map;
     function initMap() {
       map = new google.maps.Map(document.getElementById('map-area'), {
@@ -50,9 +50,11 @@
         zoom: 13
       });
     }
-  </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjMjdyWWNE2HLdwDtcN8MGlb7hCjCJlv0&callback=initMap"
-    async defer>
+  </script> -->
+
+  <div id="map-area"></div>
+  <div id="legend"></div>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjMjdyWWNE2HLdwDtcN8MGlb7hCjCJlv0&callback=initMap" async defer>
   </script>
 </body>
 </html>
