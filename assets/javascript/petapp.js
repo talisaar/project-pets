@@ -7,13 +7,13 @@ $(document).ready(function() {
     });
   }
   var config = {
-  apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
-  authDomain: "marksinsaneasylum.firebaseapp.com",
-  databaseURL: "https://marksinsaneasylum.firebaseio.com",
-  projectId: "marksinsaneasylum",
-  storageBucket: "marksinsaneasylum.appspot.com",
-  messagingSenderId: "587854779697"
-}
+    apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
+    authDomain: "marksinsaneasylum.firebaseapp.com",
+    databaseURL: "https://marksinsaneasylum.firebaseio.com",
+    projectId: "marksinsaneasylum",
+    storageBucket: "marksinsaneasylum.appspot.com",
+    messagingSenderId: "587854779697"
+  }
   firebase.initializeApp(config);
   // setting variables
   var database = firebase.database();
@@ -23,7 +23,7 @@ $(document).ready(function() {
   var yelpAddress = '';
   var yelpHours = '';
   var yelpWebsite = '';
-
+  // function for an ajax call to grab data and store yelp data
   function getYelpData() {
     var queryURL = '';
     $('#search-form').on('submit', function(event) {
@@ -53,17 +53,21 @@ $(document).ready(function() {
   function displayYelpData() {
 
   }
-
+  // function to get Giphy api data
   function getGiphy(){
     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + services + "&limit=100&api_key=dc6zaTOxFJmzC";
     $.ajax({
         url: queryURL,
         method: "GET"
-      }).done(function(response) {
-        for (i = 0; i < response.length; i++){
-          var gif = response.data[i].images.fixed_height.url;
-          $('#displayGif').append(gif);
-        }
+    }).done(function(response) {
+      for (i = 0; i < response.length; i++){
+        var gif = response.data[i].images.fixed_height.url;
+        $('#displayGif').append(gif);
       }
+    }
   }
+  $('#submit-Info').on('click', function(event) {
+    event.preventDefault();
+  });
+  $('.dropdown-toggle').dropdown()
 });

@@ -1,6 +1,8 @@
 #map-area {
   height: 400px;
-  width: 600px
+  width: 600px;
+  float: left;
+  margin: 5px;
 }
 
 h1 {
@@ -17,19 +19,28 @@ h1 {
   background-color: cornflowerblue;
   width: 400px;
   height: 400px;
-  margin: 10px;
+  float: left;
+  margin: 5px;
 }
 
-#user-selection {
+#user-input {
   background-color: turquoise;
-  width: 400px;
+  width: 600px;
   height: 400px;
-  margin: 10px;
+  float: left;
+  margin: 5px;
+  position: relative;
 }
 
 #search-results {
   background-color: red;
   width: 400px;
   height: 400px;
-  margin: 10px;
+  float: left;
+  margin: 5px;
+}
+#submit-info {
+  position: absolute;
+  bottom: 0;
+
 }
