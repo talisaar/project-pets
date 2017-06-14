@@ -1,0 +1,35 @@
+      #map-area {
+        height: 400px;
+        width: 600px
+      }
+
+      h1 {
+        text-align: center;
+        color: white;
+        padding: 20px;
+        background-color: green;
+        border-style: solid;
+        border-color: blue;
+        border-width: 5px;
+      }
+
+      #icon-info {
+        background-color: cornflowerblue;
+        width: 400px;
+        height: 400px;
+        margin: 10px;
+      }
+
+      #user-selection {
+        background-color: turquoise;
+        width: 400px;
+        height: 400px;
+        margin: 10px;
+      }
+
+      #search-results {
+        background-color: red;
+        width: 400px;
+        height: 400px;
+        margin: 10px;
+      }
