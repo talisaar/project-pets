@@ -1,1 +1,2 @@
-# project-pets
+# PetServices
+pet services app
