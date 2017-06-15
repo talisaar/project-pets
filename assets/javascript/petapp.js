@@ -108,6 +108,12 @@ $(document).ready(function() {
   var yelpAddress = '';
   var yelpHours = '';
   var yelpWebsite = '';
+  var yelpLattitude = '';
+  var yelpLongitude = '';
+  var inputSelection = '';
+  var inputAddress = '';
+  var inputDistance = '';
+
 
   // function getYelpData() {
   //   var queryURL = '';
@@ -151,4 +157,17 @@ $(document).ready(function() {
       }
     })
   }
+
+  $('#submit-Info').on('click', function(event) {
+    event.preventDefault();
+    inputSelection = $('#selection-input').val().trim();
+    inputAddress = $('#address-input').val().trim();
+    inputDistance = $('#distance-input').val().trim();
+
+    // cleans form fields after hitting submit
+    $('#selection-input').val('');
+    $('#address-input').val('');
+    $('#distance-input').val('');
+
+  })
 });

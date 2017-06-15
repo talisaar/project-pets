@@ -58,8 +58,20 @@ h1 {
   float: left;
   margin: 5px;
 }
-#submit-info {
+#submit-Info {
   position: absolute;
-  bottom: 0;
+  margin-left: 10px;
 
+}
+
+#dropdownMenu1 {
+  margin-top: 10px;
+}
+
+.row {
+  margin-left: 10px !important;
+}
+
+#selection-input {
+  margin-top: 30px;
 }
