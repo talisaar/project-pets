@@ -121,11 +121,11 @@ function initMap() {
         map: map
     });
 
-        newmarker.addListener('click', function() {
-          console.log("clicked a markr");
-          $("#icon-info").text("Info of this marker");
-          $("#icon-info").css("font-size", "20px");
-        });
+    newmarker.addListener('click', function() {
+      console.log("clicked a markr");
+      $("#icon-info").text("Info of this marker");
+      $("#icon-info").css("font-size", "20px");
+    });
 
     });
     // This creates the legend
@@ -149,91 +149,87 @@ function initMap() {
 
 $(document).ready(function() {
 
-    //   var config = {
-    //   apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
-    //   authDomain: "marksinsaneasylum.firebaseapp.com",
-    //   databaseURL: "https://marksinsaneasylum.firebaseio.com",
-    //   projectId: "marksinsaneasylum",
-    //   storageBucket: "marksinsaneasylum.appspot.com",
-    //   messagingSenderId: "587854779697"
-    // }
-    //   firebase.initializeApp(config);
-    //   // setting variables
-    //   var database = firebase.database();
-    var inputSelection = '';
-    var inputAddress = '';
-    var inputDistance = '';
+  //   var config = {
+  //   apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
+  //   authDomain: "marksinsaneasylum.firebaseapp.com",
+  //   databaseURL: "https://marksinsaneasylum.firebaseio.com",
+  //   projectId: "marksinsaneasylum",
+  //   storageBucket: "marksinsaneasylum.appspot.com",
+  //   messagingSenderId: "587854779697"
+  // }
+  //   firebase.initializeApp(config);
+  //   // setting variables
+  //   var database = firebase.database();
+  var inputSelection = '';
+  var inputAddress = '';
+  var inputDistance = '';
 
-    function displayYelpData() {
-
-    }
-
-    function getGiphy() {
-        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + inputSelection + "&limit=100&api_key=dc6zaTOxFJmzC";
-        $.ajax({
-            url: queryURL,
-            method: "GET"
-        }).done(function(response) {
-            $('#displayGifs').prepend(JSON.stringify(response));
-            var selectionDiv = $('<div id="selectionData">');
-            var i = Math.floor(Math.random() * 50);
-            var gif = response.data[i].images.fixed_height.url;
-            var displayGiffy = $('<img>')
-                .attr('src', gif)
-                .addClass('gifImage');
-            selectionDiv.append(displayGiffy);
-            $('#displayGif').prepend(selectionDiv);
-        })
-    }
-    function alertModal() {
-      // Get the modal
-      var modal = document.getElementById('myModal');
-
-      // Get the <span> element that closes the modal
-      var span = document.getElementsByClassName("close")[0];
-
-      // sets display to block, showing the modal
-      modal.style.display = "block";
-
-      // When the user clicks on <span> (x), close the modal
-      span.onclick = function() {
-        modal.style.display = "none";
-      }
-
-      // When the user clicks anywhere outside of the modal, close it
-      window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-      }
-    }
-
-    $('#submit-Info').on('click', function(event) {
-        event.preventDefault();
-        inputSelection = $('#selection-input').val();
-        if (inputSelection === 'void') {
-          alertModal();
-          return false;
-        }
-        inputAddress = $('#pac-input').val();
-        if (inputAddress === '') {
-          alertModal();
-          return false;
-        };
-        inputDistance = $('#distance-input').val();
-        if (inputDistance === '') {
-          alertModal();
-          return false;
-        };
-
-        // console.log('selection: ' + inputSelection);
-        // console.log('address: ' + inputAddress);
-        // console.log('distance: ' + inputDistance);
-        getGiphy(inputSelection);
-        // clears form fields after hitting submit, selection is reset to 'void' status
-        $('#selection-input').val('void');
-        $('#address-input').val('');
-        $('#distance-input').val('');
+  function getGiphy() {
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + inputSelection + "&limit=100&api_key=dc6zaTOxFJmzC";
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).done(function(response) {
+      $('#displayGifs').prepend(JSON.stringify(response));
+      var selectionDiv = $('<div id="selectionData">');
+      var i = Math.floor(Math.random() * 50);
+      var gif = response.data[i].images.fixed_height.url;
+      var displayGiffy = $('<img>')
+          .attr('src', gif)
+          .addClass('gifImage');
+      selectionDiv.append(displayGiffy);
+      $('#displayGif').prepend(selectionDiv);
     })
+  }
+  function alertModal() {
+    // Get the modal
+    var modal = document.getElementById('myModal');
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // sets display to block, showing the modal
+    modal.style.display = "block";
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+          modal.style.display = "none";
+      }
+    }
+  }
+
+  $('#submit-Info').on('click', function(event) {
+    event.preventDefault();
+    inputSelection = $('#selection-input').val();
+    if (inputSelection === 'void') {
+      alertModal();
+      return false;
+    };
+    inputAddress = $('#address-input').val();
+    if (inputAddress === '') {
+      alertModal();
+      return false;
+    };
+    inputDistance = $('#distance-input').val();
+    if (inputDistance === '') {
+      alertModal();
+      return false;
+    };
+
+    // console.log('selection: ' + inputSelection);
+    // console.log('address: ' + inputAddress);
+    // console.log('distance: ' + inputDistance);
+    getGiphy(inputSelection);
+    // clears form fields after hitting submit, selection is reset to 'void' status
+    $('#selection-input').val('void');
+    $('#address-input').val('');
+    $('#distance-input').val('');
+  })
 
 });
