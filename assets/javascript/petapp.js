@@ -160,9 +160,8 @@ $(document).ready(function() {
         .attr('src', gif)
         .addClass('gifImage');
         selectionDiv.append(displayGiffy);
-        $('#displayGif').append(selectionDiv);
+        $('#displayGif').prepend(selectionDiv);
     })
-
   }
 
   $('#submit-Info').on('click', function(event) {
