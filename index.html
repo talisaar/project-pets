@@ -15,7 +15,14 @@
   <header>
     <h1>Pet Services Finder!</h1>
   </header>
-  <div id="map-area"></div>
+
+                                  <div id="map"></div>
+                                  <div id="infowindow-content">
+                                    <img src="" width="16" height="16" id="place-icon">
+                                    <span id="place-name"  class="title"></span><br>
+                                    <span id="place-address"></span>
+                                  </div>
+
   <div id="legend"></div>
   <div id="icon-info">Icon Info
   </div>
@@ -35,7 +42,7 @@
     </div><br>
     <div class='row'>
       <label for='address-input'>Address</label><br>
-      <input class='input' type='text' id='address-input' required>
+      <input class='input' type='text' id='pac-input' required placeholder="Enter a location">
     </div><br>
     <div class='row'>
       <label for='distance-input'>Max Distance</label><br>
@@ -46,7 +53,19 @@
   <div id="search-results">Search Results
     <div id='displayGif'>
   </div>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjMjdyWWNE2HLdwDtcN8MGlb7hCjCJlv0&callback=initMap" async defer>
+  </div>
+
+
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjMjdyWWNE2HLdwDtcN8MGlb7hCjCJlv0&callback=initMap&libraries=places" async defer>
   </script>
 </body>
 </html>
+
+
+
+
+
+
+  
+    

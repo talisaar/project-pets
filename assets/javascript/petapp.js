@@ -1,91 +1,145 @@
-var map;
 function initMap() {
-  map = new google.maps.Map(document.getElementById('map-area'), {
-    center: {lat: -34.397, lng: 150.644},
-    zoom: 8
-  });
-}
-var map;
-function initMap() {
-  var self = this;
-  map = new google.maps.Map(document.getElementById('map-area'), {
-    center: {lat: 37.7749, lng: -122.4194},
-    zoom: 13
-});
+              var map = new google.maps.Map(document.getElementById('map'), {
+              center: {lat: 37.7749, lng: -122.4194},
+              zoom: 14
+               });
+                                     var card = document.getElementById('pac-card');
+                                      var input = document.getElementById('pac-input');
+                                      var types = document.getElementById('type-selector');
+                                      var strictBounds = document.getElementById('strict-bounds-selector');
 
-// Store the icons as objects with name and  image
+                                      map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
 
- var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-  var icons = {
-    parking: {
-      name: 'Parking',
-      icon: iconBase + 'parking_lot_maps.png'
-    },
-    library: {
-      name: 'Library',
-      icon: iconBase + 'library_maps.png'
-    },
-    info: {
-      name: 'Info',
-      icon: iconBase + 'info-i_maps.png'
-    }
-  };
+                                      var autocomplete = new google.maps.places.Autocomplete(input);
 
-// Store pins you want to display as object with a position and type - where type is the object name of the icon
+                                      // Bind the map's bounds (viewport) property to the autocomplete object,
+                                      // so that the autocomplete requests use the current map bounds for the
+                                      // bounds option in the request.
+                                      autocomplete.bindTo('bounds', map);
 
-  var features = [
-    {
-      position: new google.maps.LatLng(37.7749, -122.4194),
-      type: 'info'
-    }, {
-      position: new google.maps.LatLng(37.7749, -122.4294),
-      type: 'info'
-    }, {
-      position: new google.maps.LatLng(37.7749, -122.4094),
-      type: 'info'
-    }, {
-      position: new google.maps.LatLng(37.7649, -122.4194),
-      type: 'parking'
-    }, {
-      position: new google.maps.LatLng(37.7749, -122.4157),
-      type: 'parking'
-    }, {
-      position: new google.maps.LatLng(37.7749, -122.4194),
-      type: 'parking'
-    },{
-      position: new google.maps.LatLng(37.7849, -122.4194),
-      type: 'library'
-    }, {
-      position: new google.maps.LatLng(37.7749, -122.4194),
-      type: 'library'
-    }, {
-      position: new google.maps.LatLng(37.7749, -122.4250),
-      type: 'library'
-    }
-  ];
+                                      var infowindow = new google.maps.InfoWindow();
+                                      var infowindowContent = document.getElementById('infowindow-content');
+                                      infowindow.setContent(infowindowContent);
+                                      var marker = new google.maps.Marker({
+                                        map: map,
+                                        anchorPoint: new google.maps.Point(0, -29)
+                                      });
 
-// for each of the objects in the features list create a marker with the objects position and icon
+                                      autocomplete.addListener('place_changed', function() {
+                                        infowindow.close();
+                                        marker.setVisible(false);
+                                        var place = autocomplete.getPlace();
+                                        if (!place.geometry) {
+                                          // User entered the name of a Place that was not suggested and
+                                          // pressed the Enter key, or the Place Details request failed.
+                                          window.alert("No details available for input: '" + place.name + "'");
+                                          return;
+                                        }
 
-  features.forEach(function(feature) {
-    var marker = new google.maps.Marker({
-      position: feature.position,
-      icon: icons[feature.type].icon,
-      map: map
-    });
-  });
-// This creates the legend
+                                        // If the place has a geometry, then present it on a map.
+                                        if (place.geometry.viewport) {
+                                          map.fitBounds(place.geometry.viewport);
+                                        } else {
+                                          map.setCenter(place.geometry.location);
+                                          map.setZoom(14);  // Why 14? Because it looks good.
+                                        }
+                                        marker.setPosition(place.geometry.location);
+                                        marker.setVisible(true);
 
-  var legend = document.getElementById("legend");
-  for (var key in icons) {
-    var type = icons[key];
-    var name = type.name;
-    var icon = type.icon;
-    var div = document.createElement('div');
-    div.innerHTML = '<img src="' + icon + '"> ' + name;
-    legend.appendChild(div);
-  }
-  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
-}
+                                        var address = '';
+                                        if (place.address_components) {
+                                          address = [
+                                            (place.address_components[0] && place.address_components[0].short_name || ''),
+                                            (place.address_components[1] && place.address_components[1].short_name || ''),
+                                            (place.address_components[2] && place.address_components[2].short_name || '')
+                                          ].join(' ');
+                                        }
+
+                                        infowindowContent.children['place-icon'].src = place.icon;
+                                        infowindowContent.children['place-name'].textContent = place.name;
+                                        infowindowContent.children['place-address'].textContent = address;
+                                        infowindow.open(map, marker);
+                                      });
+                                
+
+                                          var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+                                          var icons = {
+                                            parking: {
+                                              name: 'Parking',
+                                              icon: iconBase + 'parking_lot_maps.png'
+                                            },
+                                            library: {
+                                              name: 'Library',
+                                              icon: iconBase + 'library_maps.png'
+                                            },
+                                            info: {
+                                              name: 'Info',
+                                              icon: iconBase + 'info-i_maps.png'
+                                            }
+                                          };
+
+                                      // Store pins you want to display as object with a position and type - where type is the object name of the icon
+
+                                        var features = [
+                                          {
+                                            position: new google.maps.LatLng(37.7749, -122.4194),
+                                            type: 'info'
+                                          }, {
+                                            position: new google.maps.LatLng(37.7749, -122.4294),
+                                            type: 'info'
+                                          }, {
+                                            position: new google.maps.LatLng(37.7749, -122.4094),
+                                            type: 'info'
+                                          }, {
+                                            position: new google.maps.LatLng(37.7649, -122.4194),
+                                            type: 'parking'
+                                          }, {
+                                            position: new google.maps.LatLng(37.7749, -122.4157),
+                                            type: 'parking'
+                                          }, {
+                                            position: new google.maps.LatLng(37.7749, -122.4194),
+                                            type: 'parking'
+                                          },{
+                                            position: new google.maps.LatLng(37.7849, -122.4194),
+                                            type: 'library'
+                                          }, {
+                                            position: new google.maps.LatLng(37.7749, -122.4194),
+                                            type: 'library'
+                                          }, {
+                                            position: new google.maps.LatLng(37.7749, -122.4250),
+                                            type: 'library'
+                                          }
+                                        ];
+
+                                      // for each of the objects in the features list create a marker with the objects position and icon
+
+                                        features.forEach(function(feature) {
+                                          var marker = new google.maps.Marker({
+                                            position: feature.position,
+                                            icon: icons[feature.type].icon,
+                                            map: map
+                                          });
+                                        });
+                                      // This creates the legend
+
+                                        var legend = document.getElementById("legend");
+                                        for (var key in icons) {
+                                          var type = icons[key];
+                                          var name = type.name;
+                                          var icon = type.icon;
+                                          var div = document.createElement('div');
+                                          div.innerHTML = '<img src="' + icon + '"> ' + name;
+                                          legend.appendChild(div);
+                                        }
+                                        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+                                      }
+
+
+
+
+
+
+
 // THE CODE BELOW IS COMMENTED OUT BECAUSE IT MAKES THE CODE ABOVE MOT WORK
 // ALSO PLEASE REMEMBER THE GOOGLE MAPS CODE HAS TO BE OUTSIDE OF THE DOCUMENT.READY OR ELSE IT DOESNT WORK
 
@@ -167,7 +221,7 @@ $(document).ready(function() {
   $('#submit-Info').on('click', function(event) {
     event.preventDefault();
     inputSelection = $('#selection-input').val().trim();
-    inputAddress = $('#address-input').val().trim();
+    inputAddress = $('#pac-input').val().trim();
     inputDistance = $('#distance-input').val().trim();
     // console.log('selection: ' + inputSelection);
     // console.log('address: ' + inputAddress);
