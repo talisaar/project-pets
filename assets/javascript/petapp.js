@@ -1,10 +1,10 @@
-  var map;
-  function initMap() {
-    map = new google.maps.Map(document.getElementById('map-area'), {
-      center: {lat: -34.397, lng: 150.644},
-      zoom: 8
-    });
-  }
+var map;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map-area'), {
+    center: {lat: -34.397, lng: 150.644},
+    zoom: 8
+  });
+}
 var map;
 function initMap() {
   var self = this;
@@ -91,64 +91,92 @@ function initMap() {
 
 $(document).ready(function() {
 
-  var config = {
-  apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
-  authDomain: "marksinsaneasylum.firebaseapp.com",
-  databaseURL: "https://marksinsaneasylum.firebaseio.com",
-  projectId: "marksinsaneasylum",
-  storageBucket: "marksinsaneasylum.appspot.com",
-  messagingSenderId: "587854779697"
-}
-  firebase.initializeApp(config);
-  // setting variables
-  var database = firebase.database();
+//   var config = {
+//   apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
+//   authDomain: "marksinsaneasylum.firebaseapp.com",
+//   databaseURL: "https://marksinsaneasylum.firebaseio.com",
+//   projectId: "marksinsaneasylum",
+//   storageBucket: "marksinsaneasylum.appspot.com",
+//   messagingSenderId: "587854779697"
+// }
+//   firebase.initializeApp(config);
+//   // setting variables
+//   var database = firebase.database();
   var yelpID = '';
   var yelpName = '';
   var yelpRating = '';
   var yelpAddress = '';
   var yelpHours = '';
   var yelpWebsite = '';
+  var yelpLattitude = '';
+  var yelpLongitude = '';
+  var inputSelection = '';
+  var inputAddress = '';
+  var inputDistance = '';
+
 
   // function getYelpData() {
   //   var queryURL = '';
   //   $('#search-form').on('submit', function(event) {
   //   event.preventDefault();
 
-  //   var services = document.getElementById('services').value;
-  //   var address = document.getElementById('address').value;
-  //   var maxDistance = document.getElementById('maxDistance').value;
+  //   var services = document.getElementById('selection-input').value;
+  //   var address = document.getElementById('address-input').value;
+  //   var maxDistance = document.getElementById('distance-input').value;
   //   $.ajax({
   //     url: queryURL,
   //     method: 'GET',
   //     data: {
-  //       'api-key':,
+  //       'api-key': 'apikey',
   //       'services': services
   //     }
   //   }).done(function(response){
-  //     yelpID = response;
-  //     yelpName = response;
-  //     yelpRating = response;
-  //     yelpAddress = response;
-  //     yelpHours = response;
-  //     yelpWebsite = response;
+  //     var response = response.val();
+  //     yelpID = response.yelpID;
+  //     yelpName = response.yelpName;
+  //     yelpRating = response.yelpRating;
+  //     yelpAddress = response.yelpAddress;
+  //     yelpHours = response.yelpHours;
+  //     yelpWebsite = response.yelpWebsite;
   //   });
   //   getGiphy(services);
-  // }
+  // })
 
   function displayYelpData() {
 
   }
 
   function getGiphy(){
-    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + services + "&limit=100&api_key=dc6zaTOxFJmzC";
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + inputSelection + "&limit=100&api_key=dc6zaTOxFJmzC";
     $.ajax({
         url: queryURL,
         method: "GET"
     }).done(function(response) {
-      for (i = 0; i < response.length; i++){
+        $('#displayGifs').prepend(JSON.stringify(response));
+        var selectionDiv = $('<div id="selectionData">');
+        var i = Math.floor(Math.random() * 50);
         var gif = response.data[i].images.fixed_height.url;
-        $('#displayGif').append(gif);
-      }
+        var displayGiffy = $('<img>')
+        .attr('src', gif)
+        .addClass('gifImage');
+        selectionDiv.append(displayGiffy);
+        $('#displayGif').prepend(selectionDiv);
     })
   }
+
+  $('#submit-Info').on('click', function(event) {
+    event.preventDefault();
+    inputSelection = $('#selection-input').val().trim();
+    inputAddress = $('#address-input').val().trim();
+    inputDistance = $('#distance-input').val().trim();
+    // console.log('selection: ' + inputSelection);
+    // console.log('address: ' + inputAddress);
+    // console.log('distance: ' + inputDistance);
+    getGiphy(inputSelection);
+    // clears form fields after hitting submit, selection is reset to 'void' status
+    $('#selection-input').val('void');
+    $('#address-input').val('');
+    $('#distance-input').val('');
+  })
+
 });
