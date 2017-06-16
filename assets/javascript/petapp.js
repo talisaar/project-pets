@@ -185,22 +185,44 @@ $(document).ready(function() {
             $('#displayGif').prepend(selectionDiv);
         })
     }
+    function alertModal() {
+      // Get the modal
+      var modal = document.getElementById('myModal');
+
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("close")[0];
+
+      // sets display to block, showing the modal
+      modal.style.display = "block";
+
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function() {
+        modal.style.display = "none";
+      }
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+      }
+    }
 
     $('#submit-Info').on('click', function(event) {
         event.preventDefault();
         inputSelection = $('#selection-input').val();
         if (inputSelection === 'void') {
-          alert('test');
+          alertModal();
           return false;
         }
         inputAddress = $('#pac-input').val();
         if (inputAddress === '') {
-          alert('test');
+          alertModal();
           return false;
         };
         inputDistance = $('#distance-input').val();
         if (inputDistance === '') {
-          alert('test');
+          alertModal();
           return false;
         };
 
