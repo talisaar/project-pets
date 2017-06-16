@@ -147,16 +147,22 @@ $(document).ready(function() {
   }
 
   function getGiphy(){
-    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + services + "&limit=100&api_key=dc6zaTOxFJmzC";
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + inputSelection + "&limit=100&api_key=dc6zaTOxFJmzC";
     $.ajax({
         url: queryURL,
         method: "GET"
     }).done(function(response) {
-      for (i = 0; i < response.length; i++){
+        $('#displayGifs').prepend(JSON.stringify(response));
+        var selectionDiv = $('<div id="selectionData">');
+        var i = Math.floor(Math.random() * 50);
         var gif = response.data[i].images.fixed_height.url;
-        $('#displayGif').append(gif);
-      }
+        var displayGiffy = $('<img>')
+        .attr('src', gif)
+        .addClass('gifImage');
+        selectionDiv.append(displayGiffy);
+        $('#displayGif').append(selectionDiv);
     })
+
   }
 
   $('#submit-Info').on('click', function(event) {
@@ -164,13 +170,14 @@ $(document).ready(function() {
     inputSelection = $('#selection-input').val().trim();
     inputAddress = $('#address-input').val().trim();
     inputDistance = $('#distance-input').val().trim();
-    console.log('selection: ' + inputSelection);
-    console.log('address: ' + inputAddress);
-    console.log('distance: ' + inputDistance);
-    // cleans form fields after hitting submit
+    // console.log('selection: ' + inputSelection);
+    // console.log('address: ' + inputAddress);
+    // console.log('distance: ' + inputDistance);
+    getGiphy(inputSelection);
+    // clears form fields after hitting submit, selection is reset to 'void' status
     $('#selection-input').val('void');
     $('#address-input').val('');
     $('#distance-input').val('');
-
   })
+
 });
