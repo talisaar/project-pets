@@ -114,11 +114,20 @@ function initMap() {
                                       // for each of the objects in the features list create a marker with the objects position and icon
 
                                         features.forEach(function(feature) {
-                                          var marker = new google.maps.Marker({
+                                          var newmarker = new google.maps.Marker({
                                             position: feature.position,
                                             icon: icons[feature.type].icon,
                                             map: map
                                           });
+
+                                        newmarker.addListener('click', function() {
+                                        console.log("clicked a markr");
+                                        $("#icon-info").text("Info of this marker");
+                                        $("#icon-info").css("font-size", "20px");  
+  
+
+                                        });
+
                                         });
                                       // This creates the legend
 
@@ -132,6 +141,10 @@ function initMap() {
                                           legend.appendChild(div);
                                         }
                                         map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+
+
+                                       
+
                                       }
 
 
