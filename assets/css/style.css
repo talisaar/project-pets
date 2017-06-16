@@ -1,13 +1,10 @@
-#map-area {
+#map {
   height: 400px;
   width: 600px;
   float: left;
   margin: 5px;
 }
-#map {
-  height: 400px;
-  width: 100%;
-}
+
 
 #legend {
   font-family: Arial, sans-serif;
