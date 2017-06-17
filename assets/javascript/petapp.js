@@ -256,6 +256,11 @@ function initMap() {
 // ALSO PLEASE REMEMBER THE GOOGLE MAPS CODE HAS TO BE OUTSIDE OF THE DOCUMENT.READY OR ELSE IT DOESNT WORK
 
 $(document).ready(function() {
+
+  var inputSelection = '';
+  var inputAddress = '';
+  var inputDistance = '';
+  var animal = ['pug', 'cat', 'bunny', 'hamster', 'bird'];
   //   var config = {
   //   apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
   //   authDomain: "marksinsaneasylum.firebaseapp.com",
@@ -286,32 +291,13 @@ $(document).ready(function() {
         var resultUrl = response.listings[i].merchantUrl;
         var phone = response.listings[i].phone.dispNum;
         var geoCode = response.geoCode;
-
-        var result = $("#displayAPI")
-        .attr('src', name)
-        .attr('data-src', address)
-        .attr('', resultUrl)
-        .attr('', phone)
-        .appendTo($("#displayAPI"));
-        console.log(result);
+        // these lines dont work
+        var result =$('<p>')
+        .html(name + '<br>' + address + '<br>' + resultUrl + '<br>' + phone)
+        .appendTo($('#displayAPI'));
       }
     });
   };
-//   var config = {
-//   apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
-//   authDomain: "marksinsaneasylum.firebaseapp.com",
-//   databaseURL: "https://marksinsaneasylum.firebaseio.com",
-//   projectId: "marksinsaneasylum",
-//   storageBucket: "marksinsaneasylum.appspot.com",
-//   messagingSenderId: "587854779697"
-// }
-//   firebase.initializeApp(config);
-//   // setting variables
-//   var database = firebase.database();
-  var inputSelection = '';
-  var inputAddress = '';
-  var inputDistance = '';
-  var animal = ['pug', 'cat', 'bunny', 'hamster', 'bird'];
 
   function shuffleAnimal(animal) {
     var j = animal.length - 1;
@@ -381,31 +367,18 @@ $(document).ready(function() {
   }
 
   $('#submit-Info').on('click', function(event) {
-      event.preventDefault();
-      inputSelection = $('#selection-input').val();
-      inputAddress = $('#pac-input').val();
-      inputDistance = $('#distance-input').val();
-      getGiphy(inputSelection);
-      getBizData();
-      // clears form fields after hitting submit, selection is reset to 'void' status
-      $('#selection-input').val('void');
-      $('#address-input').val('');
-      $('#distance-input').val('');
-  })
-
-  $('#submit-Info').on('click', function(event) {
     event.preventDefault();
     inputSelection = $('#selection-input').val();
     if (inputSelection === 'void') {
       alertModal();
       return false;
     };
-    inputAddress = $('#address-input').val().trim();
+    inputAddress = $('#pac-input').val();
     if (inputAddress === '') {
       alertModal();
       return false;
     };
-    inputDistance = $('#pac-input').val().trim();
+    inputDistance = $('#distance-input').val();
     for (var i = 0; i < inputDistance.length; i++) {
       // converts input value to an int
       var number = parseInt(inputDistance[i]);
@@ -416,14 +389,15 @@ $(document).ready(function() {
       }
     }
     if (inputDistance === '') {
-      alertModal();
+      numberModal();
       return false;
     };
 
-    getGiphy(inputSelection);
+    getGiphy();
+    getBizData()
     // clears form fields after hitting submit, selection is reset to 'void' status
     $('#selection-input').val('void');
-    $('#address-input').val('');
+    $('#pac-input').val('');
     $('#distance-input').val('');
   })
 
