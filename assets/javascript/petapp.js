@@ -148,50 +148,6 @@ function initMap() {
 // ALSO PLEASE REMEMBER THE GOOGLE MAPS CODE HAS TO BE OUTSIDE OF THE DOCUMENT.READY OR ELSE IT DOESNT WORK
 
 $(document).ready(function() {
-    //   var config = {
-    //   apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
-    //   authDomain: "marksinsaneasylum.firebaseapp.com",
-    //   databaseURL: "https://marksinsaneasylum.firebaseio.com",
-    //   projectId: "marksinsaneasylum",
-    //   storageBucket: "marksinsaneasylum.appspot.com",
-    //   messagingSenderId: "587854779697"
-    // }
-    //   firebase.initializeApp(config);
-    //   // setting variables
-    //   var database = firebase.database();
-
-    // this retrieves business data
-    function getBizData() {
-      var search = $("#selection-input").val();
-      var location = $("#pac-input").val();
-      var queryURL = "http://api.sandbox.yellowapi.com/FindBusiness/?" + "what=" + search + "&where=" + location + "&fmt=JSON" + "&pgLen=5" + "&UID=127.0.0.1" + "&apikey=8v2eyjyx79f4m3zcctsyqmxd";
-
-      // and now, placing the API call using AJAX and the Get method:
-      $.ajax({
-        type: "GET",
-        url: queryURL,
-      }).done(function(response) {
-        console.log(response);
-        response.data.listings.forEach(displayData);
-      });
-    };
-
-    // this function displays the biz data we fetched from our API.
-    function displayData(dataNode) {
-      // assign variables for the file types we want from the API response
-      var name = dataNode.listings.name;
-      var address = dataNode.listings.address;
-      var resultUrl = dataNode.listings.merchantUrl;
-      var phone = dataNode.listings.phone.dispNum;
-      var geoCode = dataNode.geoCode;
-      // here are all the different things I want to happen to this dynamic image tag: add an attribute, and append the results to the correct container.
-      var result = $("#search-results")
-        .attr('src', name)
-        .attr('data-src', address)
-        .attr('', resultUrl)
-        .attr('', phone)
-        .appendTo($("#search-results"));
-    };
   //   var config = {
   //   apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
   //   authDomain: "marksinsaneasylum.firebaseapp.com",
@@ -203,12 +159,60 @@ $(document).ready(function() {
   //   firebase.initializeApp(config);
   //   // setting variables
   //   var database = firebase.database();
+
+  // this retrieves business data
+  function getBizData() {
+    var search = $("#selection-input").val();
+    var location = $("#pac-input").val();
+    var queryURL = "http://api.sandbox.yellowapi.com/FindBusiness/?" + "what=" + search + "&where=" + location + "&fmt=JSON" + "&pgLen=5" + "&UID=127.0.0.1" + "&apikey=8v2eyjyx79f4m3zcctsyqmxd";
+
+    // and now, placing the API call using AJAX and the Get method:
+    $.ajax({
+      type: "GET",
+      url: queryURL,
+    }).done(function(response) {
+      var dataSize = response.listings.length
+      for (var i = 0; i < dataSize; i++) {
+        var name = response.listings[i].name;
+        var address = response.listings[i].address.street;
+        var resultUrl = response.listings[i].merchantUrl;
+        var phone = response.listings[i].phone.dispNum;
+        var geoCode = response.geoCode;
+
+        var result = $("#displayAPI")
+        .attr('src', name)
+        .attr('data-src', address)
+        .attr('', resultUrl)
+        .attr('', phone)
+        .appendTo($("#displayAPI"));
+        console.log(result);
+      }
+    });
+  };
+//   var config = {
+//   apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
+//   authDomain: "marksinsaneasylum.firebaseapp.com",
+//   databaseURL: "https://marksinsaneasylum.firebaseio.com",
+//   projectId: "marksinsaneasylum",
+//   storageBucket: "marksinsaneasylum.appspot.com",
+//   messagingSenderId: "587854779697"
+// }
+//   firebase.initializeApp(config);
+//   // setting variables
+//   var database = firebase.database();
   var inputSelection = '';
   var inputAddress = '';
   var inputDistance = '';
+  var animal = ['pug', 'cat', 'bunny', 'hamster', 'bird'];
+
+  function shuffleAnimal(animal) {
+    var j = animal.length - 1;
+    var k = Math.floor(Math.random() * (j + 1));
+    return animal[k];
+  }
 
   function getGiphy() {
-    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + inputSelection + "&limit=100&api_key=dc6zaTOxFJmzC";
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + shuffleAnimal(animal) + "&limit=100&api_key=dc6zaTOxFJmzC";
     $.ajax({
         url: queryURL,
         method: "GET"
@@ -246,22 +250,6 @@ $(document).ready(function() {
       }
     }
   }
-
-    $('#submit-Info').on('click', function(event) {
-        event.preventDefault();
-        inputSelection = $('#selection-input').val().trim();
-        inputAddress = $('#pac-input').val().trim();
-        inputDistance = $('#distance-input').val().trim();
-        // console.log('selection: ' + inputSelection);
-        // console.log('address: ' + inputAddress);
-        // console.log('distance: ' + inputDistance);
-        getGiphy(inputSelection);
-        getBizData();
-        // clears form fields after hitting submit, selection is reset to 'void' status
-        $('#selection-input').val('void');
-        $('#address-input').val('');
-        $('#distance-input').val('');
-    })
   function numberModal() {
     var modal = document.getElementById('numberModal');
 
@@ -285,6 +273,19 @@ $(document).ready(function() {
   }
 
   $('#submit-Info').on('click', function(event) {
+      event.preventDefault();
+      inputSelection = $('#selection-input').val();
+      inputAddress = $('#pac-input').val();
+      inputDistance = $('#distance-input').val();
+      getGiphy(inputSelection);
+      getBizData();
+      // clears form fields after hitting submit, selection is reset to 'void' status
+      $('#selection-input').val('void');
+      $('#address-input').val('');
+      $('#distance-input').val('');
+  })
+
+  $('#submit-Info').on('click', function(event) {
     event.preventDefault();
     inputSelection = $('#selection-input').val();
     if (inputSelection === 'void') {
@@ -297,7 +298,6 @@ $(document).ready(function() {
       return false;
     };
     inputDistance = $('#pac-input').val().trim();
-    var numDistance = inputDistance.length;
     for (var i = 0; i < inputDistance.length; i++) {
       // converts input value to an int
       var number = parseInt(inputDistance[i]);
