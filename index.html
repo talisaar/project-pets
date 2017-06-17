@@ -15,7 +15,7 @@
   <header>
     <h1>Pet Services Finder!</h1>
   </header>
-  <div id="map-area"></div>
+  <div id="map"></div>
   <div id="legend"></div>
   <div id="icon-info">Icon Info
   </div>
@@ -39,7 +39,7 @@
     </div><br>
     <div class='row'>
       <label for='distance-input'>Max Distance</label><br>
-      <input class='input' type='text' id='distance-input' required>
+      <input class='input' type='text' id='pac-input' required>
     </div><br>
     <button type='submit' value='Submit' id='submit-Info'>Submit</button>
   </div>
@@ -53,7 +53,15 @@
       <p><strong><center>Please fill in all inputs!</center></strong></p>
     </div>
   </div>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjMjdyWWNE2HLdwDtcN8MGlb7hCjCJlv0&callback" async defer>
+  <div id="numberModal" class="modal">
+    <div class="numberModal-content">
+      <span class="close">&times;</span>
+      <p><center><strong>Please enter numbers only</strong></center></p>
+    </div>
+  </div>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjMjdyWWNE2HLdwDtcN8MGlb7hCjCJlv0&callback=initMap&libraries=places" async defer>
   </script>
+<!--   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjMjdyWWNE2HLdwDtcN8MGlb7hCjCJlv0&callback" async defer>
+  </script> -->
 </body>
 </html>

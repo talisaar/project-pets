@@ -97,6 +97,7 @@ h1 {
 }
 
 /* Modal Content/Box */
+.numberModal-content,
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
