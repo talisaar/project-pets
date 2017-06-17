@@ -27,10 +27,10 @@
       <div class="dropdown">
         <select id='selection-input'>
           <option value='void'>Available Services</option>
-          <option value='funny'>Veterinarian</option>
-          <option value='dog'>Pet Grooming</option>
-          <option value='cat'>Pet Store</option>
-          <option value='hamster'>Pet Hospital</option>
+          <option value='Veterinarian'>Veterinarian</option>
+          <option value='pet grooming'>Pet Grooming</option>
+          <option value='pet store'>Pet Store</option>
+          <option value='pet hospital'>Pet Hospital</option>
         </select>
       </div>
     </div><br>
@@ -47,7 +47,8 @@
     <button type='submit' value='Submit' id='submit-Info'>Submit</button>
   </div>
   <div id="search-results">Search Results
-    <div id='displayGif'>
+    <div id='displayGif'></div>
+    <div id='displayAPI'></div>
   </div>
   <div id="myModal" class="modal">
   <!-- Modal content -->
@@ -59,13 +60,10 @@
   <div id="numberModal" class="modal">
     <div class="numberModal-content">
       <button class='close2'>ok</button>
-      <!-- <span class="close">&times;</span> -->
       <p><center><strong>Please enter numbers only</strong></center></p>
     </div>
   </div>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjMjdyWWNE2HLdwDtcN8MGlb7hCjCJlv0&callback=initMap&libraries=places" async defer>
   </script>
-<!--   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjMjdyWWNE2HLdwDtcN8MGlb7hCjCJlv0&callback" async defer>
-  </script> -->
 </body>
 </html>
