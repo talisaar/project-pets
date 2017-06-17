@@ -172,7 +172,7 @@ $(document).ready(function() {
     }).done(function(response) {
       $('#displayGifs').prepend(JSON.stringify(response));
       var selectionDiv = $('<div id="selectionData">');
-      var i = Math.floor(Math.random() * 50);
+      var i = Math.floor(Math.random() * 100);
       var gif = response.data[i].images.fixed_height.url;
       var displayGiffy = $('<img>')
           .attr('src', gif)
@@ -208,20 +208,20 @@ $(document).ready(function() {
     var modal = document.getElementById('numberModal');
 
     // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close2")[0];
+    var button = document.getElementsByClassName("close2")[0];
 
     // sets display to block, showing the modal
     modal.style.display = "block";
 
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
+    // When the user clicks on button ok, close the modal
+    button.onclick = function() {
       modal.style.display = "none";
     }
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
       if (event.target == modal) {
-          modal.style.display = "none";
+        modal.style.display = "none";
       }
     }
   }
@@ -233,16 +233,17 @@ $(document).ready(function() {
       alertModal();
       return false;
     };
-    inputAddress = $('#address-input').val();
+    inputAddress = $('#address-input').val().trim();
     if (inputAddress === '') {
       alertModal();
       return false;
     };
-    inputDistance = $('#pac-input').val();
+    inputDistance = $('#pac-input').val().trim();
     var numDistance = inputDistance.length;
-    // console.log(numDistance);
     for (var i = 0; i < inputDistance.length; i++) {
+      // converts input value to an int
       var number = parseInt(inputDistance[i]);
+      // checking to see if input is a number
       if (isNaN(number)) {
         numberModal();
         return false;
@@ -253,9 +254,6 @@ $(document).ready(function() {
       return false;
     };
 
-    // console.log('selection: ' + inputSelection);
-    // console.log('address: ' + inputAddress);
-    // console.log('distance: ' + inputDistance);
     getGiphy(inputSelection);
     // clears form fields after hitting submit, selection is reset to 'void' status
     $('#selection-input').val('void');
