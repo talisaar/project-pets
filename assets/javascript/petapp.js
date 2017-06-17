@@ -169,7 +169,6 @@ function initMap() {
     infowindowContent.children['place-name'].textContent = place.name;
     infowindowContent.children['place-address'].textContent = address;
     infowindow.open(map, marker);
-  });
 
 
   var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
