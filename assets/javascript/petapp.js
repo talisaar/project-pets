@@ -285,7 +285,8 @@ $(document).ready(function() {
       url: queryURL,
     }).done(function(response) {
       var dataSize = response.listings.length
-      for (var i = 0; i < dataSize; i++) {
+      for (var i = 0; i < 5; i++) {
+        getGiphy();
         var name = response.listings[i].name;
         var address = response.listings[i].address.street;
         var resultUrl = response.listings[i].merchantUrl;
@@ -293,7 +294,7 @@ $(document).ready(function() {
         var geoCode = response.geoCode;
         // these lines dont work
         var result =$('<p>')
-        .html(name + '<br>' + address + '<br>' + resultUrl + '<br>' + phone)
+        .html(name + '<br>' + 'address: ' + address + '<br>' + 'url: ' + resultUrl + '<br>' + 'phone' + phone)
         .appendTo($('#displayAPI'));
       }
     });
@@ -393,7 +394,6 @@ $(document).ready(function() {
       return false;
     };
 
-    getGiphy();
     getBizData()
     // clears form fields after hitting submit, selection is reset to 'void' status
     $('#selection-input').val('void');
