@@ -167,49 +167,39 @@ $(document).ready(function() {
     //   firebase.initializeApp(config);
     //   // setting variables
     //   var database = firebase.database();
-    var yelpID = '';
-    var yelpName = '';
-    var yelpRating = '';
-    var yelpAddress = '';
-    var yelpHours = '';
-    var yelpWebsite = '';
-    var yelpLattitude = '';
-    var yelpLongitude = '';
-    var inputSelection = '';
-    var inputAddress = '';
-    var inputDistance = '';
 
+    // this retrieves business data
+    function getBizData() {
+      var search = $("#selection-input").val();
+      var location = $("#pac-input").val();
+      var queryURL = "http://api.sandbox.yellowapi.com/FindBusiness/?" + "what=" + search + "&where=" + location + "&fmt=JSON" + "&pgLen=5" + "&UID=127.0.0.1" + "&apikey=8v2eyjyx79f4m3zcctsyqmxd";
 
-    // function getYelpData() {
-    //   var queryURL = '';
-    //   $('#search-form').on('submit', function(event) {
-    //   event.preventDefault();
+      // and now, placing the API call using AJAX and the Get method:
+      $.ajax({
+        type: "GET",
+        url: queryURL,
+      }).done(function(response) {
+        console.log(response);
+        response.data.listings.forEach(displayData);
+      });
+    };
 
-    //   var services = document.getElementById('selection-input').value;
-    //   var address = document.getElementById('address-input').value;
-    //   var maxDistance = document.getElementById('distance-input').value;
-    //   $.ajax({
-    //     url: queryURL,
-    //     method: 'GET',
-    //     data: {
-    //       'api-key': 'apikey',
-    //       'services': services
-    //     }
-    //   }).done(function(response){
-    //     var response = response.val();
-    //     yelpID = response.yelpID;
-    //     yelpName = response.yelpName;
-    //     yelpRating = response.yelpRating;
-    //     yelpAddress = response.yelpAddress;
-    //     yelpHours = response.yelpHours;
-    //     yelpWebsite = response.yelpWebsite;
-    //   });
-    //   getGiphy(services);
-    // })
-
-    function displayYelpData() {
-
-    }
+    // this function displays the biz data we fetched from our API.
+    function displayData(dataNode) {
+      // assign variables for the file types we want from the API response
+      var name = dataNode.listings.name;
+      var address = dataNode.listings.address;
+      var resultUrl = dataNode.listings.merchantUrl;
+      var phone = dataNode.listings.phone.dispNum;
+      var geoCode = dataNode.geoCode;
+      // here are all the different things I want to happen to this dynamic image tag: add an attribute, and append the results to the correct container.
+      var result = $("#search-results")
+        .attr('src', name)
+        .attr('data-src', address)
+        .attr('', resultUrl)
+        .attr('', phone)
+        .appendTo($("#search-results"));
+    };
 
     function getGiphy() {
         var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + inputSelection + "&limit=100&api_key=dc6zaTOxFJmzC";
@@ -238,6 +228,7 @@ $(document).ready(function() {
         // console.log('address: ' + inputAddress);
         // console.log('distance: ' + inputDistance);
         getGiphy(inputSelection);
+        getBizData();
         // clears form fields after hitting submit, selection is reset to 'void' status
         $('#selection-input').val('void');
         $('#address-input').val('');
