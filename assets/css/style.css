@@ -107,13 +107,15 @@ h1 {
 }
 
 /* The Close Button */
+.close2,
 .close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
 }
-
+.close2:hover,
+.close2:focus,
 .close:hover,
 .close:focus {
     color: black;
