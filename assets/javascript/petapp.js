@@ -271,10 +271,15 @@ $(document).ready(function() {
   // this retrieves business data
   function getBizData() {
     var search = $("#selection-input").val();
-    var location = $("#pac-input").val();
-    var queryURL = "http://api.sandbox.yellowapi.com/FindBusiness/?" + "what=" + search + "&where=" + location + "&fmt=JSON" + "&pgLen=5" + "&UID=127.0.0.1" + "&apikey=8v2eyjyx79f4m3zcctsyqmxd";
+    var location = $("#address-input").val();
+    var distance = $("#distance-input").val();
+    var queryURL = "http://api.sandbox.yellowapi.com/FindBusiness/?"
+      + "what=" + search
+      + "&where=" + location
+      + "&dist=" + distance
+      + "&fmt=JSON&pgLen=5&UID=127.0.0.1"
+      + "&apikey=8v2eyjyx79f4m3zcctsyqmxd";
 
-    // and now, placing the API call using AJAX and the Get method:
     $.ajax({
       type: "GET",
       url: queryURL,
@@ -282,20 +287,20 @@ $(document).ready(function() {
       var dataSize = response.listings.length
       for (var i = 0; i < dataSize; i++) {
         var name = response.listings[i].name;
-        var address = response.listings[i].address.street;
+        var address = response.listings[i].address.street
+          + response.listings[i].address.city
+          + response.listings[i].address.pcode
+          + response.listings[i].address.prov;
         var resultUrl = response.listings[i].merchantUrl;
         var phone = response.listings[i].phone.dispNum;
-        var geoCode = response.geoCode;
-
-        var result = $("#displayAPI")
-        .attr('src', name)
-        .attr('data-src', address)
-        .attr('', resultUrl)
-        .attr('', phone)
-        .appendTo($("#displayAPI"));
-        console.log(result);
+        var geoCode = response.listings[i].geoCode.latitude
+          + response.listings[i].geoCode.longitude;
+        var result = $("<p>")
+          .html(name + "<br>" + "Address: " + address + "<br>" + "Phone: " + phone + "<br>" + "Website: " + resultUrl)
+          .appendTo($("#displayAPI"));
       }
     });
+
   };
 //   var config = {
 //   apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
