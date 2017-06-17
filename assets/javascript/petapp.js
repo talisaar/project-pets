@@ -65,7 +65,6 @@ function initMap() {
     });
 
 
-    var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
     var icons = {
         grooming: {
             name: 'Grooming',
@@ -145,6 +144,9 @@ function initMap() {
         div.innerHTML = '<img src="' + icon + '"> ' + name;
         legend.appendChild(div);
     }
+
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+
 
     // If the place has a geometry, then present it on a map.
     if (place.geometry.viewport) {
