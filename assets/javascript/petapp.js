@@ -67,17 +67,21 @@ function initMap() {
 
     var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
     var icons = {
-        parking: {
-            name: 'Parking',
-            icon: iconBase + 'parking_lot_maps.png'
+        grooming: {
+            name: 'Grooming',
+            icon: 'assets/images/g.png'
         },
-        library: {
-            name: 'Library',
-            icon: iconBase + 'library_maps.png'
+        vet: {
+            name: 'Vet',
+            icon: 'assets/images/v.png'
         },
-        info: {
-            name: 'Info',
-            icon: iconBase + 'info-i_maps.png'
+        store: {
+            name: 'Pet Store',
+            icon: 'assets/images/s.png'
+        },
+        hospital: {
+            name: 'Pet Hospital',
+            icon: 'assets/images/h.png'
         }
     };
 
@@ -85,31 +89,31 @@ function initMap() {
 
     var features = [{
         position: new google.maps.LatLng(37.7749, -122.4194),
-        type: 'info'
+        type: 'store'
     }, {
         position: new google.maps.LatLng(37.7749, -122.4294),
-        type: 'info'
+        type: 'store'
     }, {
         position: new google.maps.LatLng(37.7749, -122.4094),
-        type: 'info'
+        type: 'store'
     }, {
         position: new google.maps.LatLng(37.7649, -122.4194),
-        type: 'parking'
+        type: 'hospital'
     }, {
         position: new google.maps.LatLng(37.7749, -122.4157),
-        type: 'parking'
+        type: 'hospital'
     }, {
         position: new google.maps.LatLng(37.7749, -122.4194),
-        type: 'parking'
+        type: 'hospital'
     }, {
         position: new google.maps.LatLng(37.7849, -122.4194),
-        type: 'library'
+        type: 'vet'
     }, {
         position: new google.maps.LatLng(37.7749, -122.4194),
-        type: 'library'
+        type: 'vet'
     }, {
         position: new google.maps.LatLng(37.7749, -122.4250),
-        type: 'library'
+        type: 'grooming'
     }];
 
     // for each of the objects in the features list create a marker with the objects position and icon
