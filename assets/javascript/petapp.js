@@ -145,21 +145,116 @@ function initMap() {
         div.innerHTML = '<img src="' + icon + '"> ' + name;
         legend.appendChild(div);
     }
-    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+
+    // If the place has a geometry, then present it on a map.
+    if (place.geometry.viewport) {
+      map.fitBounds(place.geometry.viewport);
+    } else {
+      map.setCenter(place.geometry.location);
+      map.setZoom(14); // Why 14? Because it looks good.
+    }
+    marker.setPosition(place.geometry.location);
+    marker.setVisible(true);
+
+    var address = '';
+    if (place.address_components) {
+      address = [
+        (place.address_components[0] && place.address_components[0].short_name || ''),
+        (place.address_components[1] && place.address_components[1].short_name || ''),
+        (place.address_components[2] && place.address_components[2].short_name || '')
+      ].join(' ');
+    }
+
+    infowindowContent.children['place-icon'].src = place.icon;
+    infowindowContent.children['place-name'].textContent = place.name;
+    infowindowContent.children['place-address'].textContent = address;
+    infowindow.open(map, marker);
+  });
 
 
+  var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+  var icons = {
+    parking: {
+      name: 'Parking',
+      icon: iconBase + 'parking_lot_maps.png'
+    },
+    library: {
+      name: 'Library',
+      icon: iconBase + 'library_maps.png'
+    },
+    info: {
+      name: 'Info',
+      icon: iconBase + 'info-i_maps.png'
+    }
+  };
 
+  // Store pins you want to display as object with a position and type - where type is the object name of the icon
+
+  var features = [{
+      position: new google.maps.LatLng(37.7749, -122.4194),
+      type: 'info'
+  }, {
+      position: new google.maps.LatLng(37.7749, -122.4294),
+      type: 'info'
+  }, {
+      position: new google.maps.LatLng(37.7749, -122.4094),
+      type: 'info'
+  }, {
+      position: new google.maps.LatLng(37.7649, -122.4194),
+      type: 'parking'
+  }, {
+      position: new google.maps.LatLng(37.7749, -122.4157),
+      type: 'parking'
+  }, {
+      position: new google.maps.LatLng(37.7749, -122.4194),
+      type: 'parking'
+  }, {
+      position: new google.maps.LatLng(37.7849, -122.4194),
+      type: 'library'
+  }, {
+      position: new google.maps.LatLng(37.7749, -122.4194),
+      type: 'library'
+  }, {
+      position: new google.maps.LatLng(37.7749, -122.4250),
+      type: 'library'
+  }];
+
+  // for each of the objects in the features list create a marker with the objects position and icon
+
+  features.forEach(function(feature) {
+  var newmarker = new google.maps.Marker({
+    position: feature.position,
+    icon: icons[feature.type].icon,
+    map: map
+  });
+
+  newmarker.addListener('click', function() {
+    console.log("clicked a markr");
+    $("#icon-info").text("Info of this marker");
+    $("#icon-info").css("font-size", "20px");
+  });
+
+  });
+  // This creates the legend
+
+  var legend = document.getElementById("legend");
+  for (var key in icons) {
+    var type = icons[key];
+    var name = type.name;
+    var icon = type.icon;
+    var div = document.createElement('div');
+    div.innerHTML = '<img src="' + icon + '"> ' + name;
+    legend.appendChild(div);
+  }
+  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 
 }
-
-
 
 
 // THE CODE BELOW IS COMMENTED OUT BECAUSE IT MAKES THE CODE ABOVE MOT WORK
 // ALSO PLEASE REMEMBER THE GOOGLE MAPS CODE HAS TO BE OUTSIDE OF THE DOCUMENT.READY OR ELSE IT DOESNT WORK
 
 $(document).ready(function() {
-
     //   var config = {
     //   apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
     //   authDomain: "marksinsaneasylum.firebaseapp.com",
@@ -171,67 +266,93 @@ $(document).ready(function() {
     //   firebase.initializeApp(config);
     //   // setting variables
     //   var database = firebase.database();
-    var yelpID = '';
-    var yelpName = '';
-    var yelpRating = '';
-    var yelpAddress = '';
-    var yelpHours = '';
-    var yelpWebsite = '';
-    var yelpLattitude = '';
-    var yelpLongitude = '';
-    var inputSelection = '';
-    var inputAddress = '';
-    var inputDistance = '';
 
+    // this retrieves business data
+    function getBizData() {
+      var search = $("#selection-input").val();
+      var location = $("#pac-input").val();
+      var queryURL = "http://api.sandbox.yellowapi.com/FindBusiness/?" + "what=" + search + "&where=" + location + "&fmt=JSON" + "&pgLen=5" + "&UID=127.0.0.1" + "&apikey=8v2eyjyx79f4m3zcctsyqmxd";
 
-    // function getYelpData() {
-    //   var queryURL = '';
-    //   $('#search-form').on('submit', function(event) {
-    //   event.preventDefault();
+      // and now, placing the API call using AJAX and the Get method:
+      $.ajax({
+        type: "GET",
+        url: queryURL,
+      }).done(function(response) {
+        console.log(response);
+        response.data.listings.forEach(displayData);
+      });
+    };
 
-    //   var services = document.getElementById('selection-input').value;
-    //   var address = document.getElementById('address-input').value;
-    //   var maxDistance = document.getElementById('distance-input').value;
-    //   $.ajax({
-    //     url: queryURL,
-    //     method: 'GET',
-    //     data: {
-    //       'api-key': 'apikey',
-    //       'services': services
-    //     }
-    //   }).done(function(response){
-    //     var response = response.val();
-    //     yelpID = response.yelpID;
-    //     yelpName = response.yelpName;
-    //     yelpRating = response.yelpRating;
-    //     yelpAddress = response.yelpAddress;
-    //     yelpHours = response.yelpHours;
-    //     yelpWebsite = response.yelpWebsite;
-    //   });
-    //   getGiphy(services);
-    // })
+    // this function displays the biz data we fetched from our API.
+    function displayData(dataNode) {
+      // assign variables for the file types we want from the API response
+      var name = dataNode.listings.name;
+      var address = dataNode.listings.address;
+      var resultUrl = dataNode.listings.merchantUrl;
+      var phone = dataNode.listings.phone.dispNum;
+      var geoCode = dataNode.geoCode;
+      // here are all the different things I want to happen to this dynamic image tag: add an attribute, and append the results to the correct container.
+      var result = $("#search-results")
+        .attr('src', name)
+        .attr('data-src', address)
+        .attr('', resultUrl)
+        .attr('', phone)
+        .appendTo($("#search-results"));
+    };
+  //   var config = {
+  //   apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
+  //   authDomain: "marksinsaneasylum.firebaseapp.com",
+  //   databaseURL: "https://marksinsaneasylum.firebaseio.com",
+  //   projectId: "marksinsaneasylum",
+  //   storageBucket: "marksinsaneasylum.appspot.com",
+  //   messagingSenderId: "587854779697"
+  // }
+  //   firebase.initializeApp(config);
+  //   // setting variables
+  //   var database = firebase.database();
+  var inputSelection = '';
+  var inputAddress = '';
+  var inputDistance = '';
 
-    function displayYelpData() {
+  function getGiphy() {
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + inputSelection + "&limit=100&api_key=dc6zaTOxFJmzC";
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).done(function(response) {
+      $('#displayGifs').prepend(JSON.stringify(response));
+      var selectionDiv = $('<div id="selectionData">');
+      var i = Math.floor(Math.random() * 100);
+      var gif = response.data[i].images.fixed_height.url;
+      var displayGiffy = $('<img>')
+          .attr('src', gif)
+          .addClass('gifImage');
+      selectionDiv.append(displayGiffy);
+      $('#displayGif').prepend(selectionDiv);
+    })
+  }
+  function alertModal() {
+    // Get the modal
+    var modal = document.getElementById('myModal');
 
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // sets display to block, showing the modal
+    modal.style.display = "block";
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
     }
 
-    function getGiphy() {
-        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + inputSelection + "&limit=100&api_key=dc6zaTOxFJmzC";
-        $.ajax({
-            url: queryURL,
-            method: "GET"
-        }).done(function(response) {
-            $('#displayGifs').prepend(JSON.stringify(response));
-            var selectionDiv = $('<div id="selectionData">');
-            var i = Math.floor(Math.random() * 50);
-            var gif = response.data[i].images.fixed_height.url;
-            var displayGiffy = $('<img>')
-                .attr('src', gif)
-                .addClass('gifImage');
-            selectionDiv.append(displayGiffy);
-            $('#displayGif').prepend(selectionDiv);
-        })
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+          modal.style.display = "none";
+      }
     }
+  }
 
     $('#submit-Info').on('click', function(event) {
         event.preventDefault();
@@ -242,10 +363,67 @@ $(document).ready(function() {
         // console.log('address: ' + inputAddress);
         // console.log('distance: ' + inputDistance);
         getGiphy(inputSelection);
+        getBizData();
         // clears form fields after hitting submit, selection is reset to 'void' status
         $('#selection-input').val('void');
         $('#address-input').val('');
         $('#distance-input').val('');
     })
+  function numberModal() {
+    var modal = document.getElementById('numberModal');
+
+    // Get the <span> element that closes the modal
+    var button = document.getElementsByClassName("close2")[0];
+
+    // sets display to block, showing the modal
+    modal.style.display = "block";
+
+    // When the user clicks on button ok, close the modal
+    button.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+  }
+
+  $('#submit-Info').on('click', function(event) {
+    event.preventDefault();
+    inputSelection = $('#selection-input').val();
+    if (inputSelection === 'void') {
+      alertModal();
+      return false;
+    };
+    inputAddress = $('#address-input').val().trim();
+    if (inputAddress === '') {
+      alertModal();
+      return false;
+    };
+    inputDistance = $('#pac-input').val().trim();
+    var numDistance = inputDistance.length;
+    for (var i = 0; i < inputDistance.length; i++) {
+      // converts input value to an int
+      var number = parseInt(inputDistance[i]);
+      // checking to see if input is a number
+      if (isNaN(number)) {
+        numberModal();
+        return false;
+      }
+    }
+    if (inputDistance === '') {
+      alertModal();
+      return false;
+    };
+
+    getGiphy(inputSelection);
+    // clears form fields after hitting submit, selection is reset to 'void' status
+    $('#selection-input').val('void');
+    $('#address-input').val('');
+    $('#distance-input').val('');
+  })
 
 });
