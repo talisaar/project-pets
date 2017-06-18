@@ -256,11 +256,6 @@ function initMap() {
 // ALSO PLEASE REMEMBER THE GOOGLE MAPS CODE HAS TO BE OUTSIDE OF THE DOCUMENT.READY OR ELSE IT DOESNT WORK
 
 $(document).ready(function() {
-
-  var inputSelection = '';
-  var inputAddress = '';
-  var inputDistance = '';
-  var animal = ['pug', 'cat', 'bunny', 'hamster', 'bird'];
   //   var config = {
   //   apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
   //   authDomain: "marksinsaneasylum.firebaseapp.com",
@@ -309,6 +304,7 @@ $(document).ready(function() {
 
   };
 
+  var animal = ['pug', 'cat', 'bunny', 'hamster', 'bird', 'turtle', 'dog'];
   function shuffleAnimal(animal) {
     var j = animal.length - 1;
     var k = Math.floor(Math.random() * (j + 1));
@@ -332,80 +328,38 @@ $(document).ready(function() {
       $('#displayGif').prepend(selectionDiv);
     })
   }
-  function alertModal() {
-    // Get the modal
-    var modal = document.getElementById('myModal');
 
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
+  function alertModal(input) {
+    $('[data-modal-option]').hide();
+    $('.modal-' + input).show();
 
-    // sets display to block, showing the modal
-    modal.style.display = "block";
+    $('#myModal').show();
 
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-      modal.style.display = "none";
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-      if (event.target == modal) {
-          modal.style.display = "none";
-      }
-    }
-  }
-  function numberModal() {
-    var modal = document.getElementById('numberModal');
-
-    // Get the <span> element that closes the modal
-    var button = document.getElementsByClassName("close2")[0];
-
-    // sets display to block, showing the modal
-    modal.style.display = "block";
-
-    // When the user clicks on button ok, close the modal
-    button.onclick = function() {
-      modal.style.display = "none";
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
+    $('#myModal .close').on('click', function() {
+      $('#myModal').hide();
+    })
   }
 
   $('#submit-Info').on('click', function(event) {
     event.preventDefault();
-    inputSelection = $('#selection-input').val();
-    if (inputSelection === 'void') {
-      alertModal();
-      return false;
-    };
-    inputAddress = $('#pac-input').val();
-    if (inputAddress === '') {
-      alertModal();
-      return false;
-    };
-    inputDistance = $('#distance-input').val();
-    for (var i = 0; i < inputDistance.length; i++) {
-      // converts input value to an int
-      var number = parseInt(inputDistance[i]);
-      // checking to see if input is a number
-      if (isNaN(number)) {
-        numberModal();
-        return false;
-      }
-    }
-    if (inputDistance === '') {
-      numberModal();
+
+    var inputSelection = $('#selection-input').val();
+    var inputAddress = $('#pac-input').val();
+    if (!inputSelection || !inputAddress) {
+      alertModal('all-inputs');
       return false;
     };
 
+    var inputDistance = $('#distance-input').val();
+    var numberRegex = /^\d+$/;
+    if (!numberRegex.test(inputDistance)) {
+      alertModal('number-inputs');
+      return false;
+    }
+
     getBizData()
     // clears form fields after hitting submit, selection is reset to 'void' status
-    $('#selection-input').val('void');
+    $('#selection-input').val('');
     $('#pac-input').val('');
     $('#distance-input').val('');
   })
