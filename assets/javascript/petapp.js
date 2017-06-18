@@ -271,7 +271,7 @@ $(document).ready(function() {
   // this retrieves business data
   function getBizData() {
     var search = $("#selection-input").val();
-    var location = $("#address-input").val();
+    var location = $("#pac-input").val();
     var distance = $("#distance-input").val();
     var queryURL = "http://api.sandbox.yellowapi.com/FindBusiness/?"
       + "what=" + search
@@ -296,9 +296,10 @@ $(document).ready(function() {
         var phone = response.listings[i].phone.dispNum;
         var geoCode = response.listings[i].geoCode.latitude
           + response.listings[i].geoCode.longitude;
+        $('#displayGif').prepend(selectionDiv);
         var result = $("<p>")
           .html(name + "<br>" + "Address: " + address + "<br>" + "Phone: " + phone + "<br>" + "Website: " + resultUrl)
-          .appendTo($("#displayAPI"));
+          .appendTo($("#displayGif"));
       }
     });
 
