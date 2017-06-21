@@ -296,10 +296,9 @@ $(document).ready(function() {
         var phone = response.listings[i].phone.dispNum;
         var geoCode = response.listings[i].geoCode.latitude
           + response.listings[i].geoCode.longitude;
-        $('#displayGif').prepend(selectionDiv);
         var result = $("<p>")
           .html(name + "<br>" + "Address: " + address + "<br>" + "Phone: " + phone + "<br>" + "Website: " + resultUrl)
-          .appendTo($("#displayGif"));
+          .appendTo($("#displayAPI"));
       }
     });
 
