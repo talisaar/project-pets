@@ -5,6 +5,8 @@ var locations_lng = [];
 
 var map;
 var markers = [];
+var type_selected;
+
 
 
 
@@ -221,19 +223,19 @@ autocomplete.addListener('place_changed', function() {
  
  
      var icons = {
-         grooming: {
+         pet_grooming: {
              name: 'Grooming',
              icon: 'assets/images/g.png'
          },
-         vet: {
+         veterinarian: {
              name: 'Vet',
              icon: 'assets/images/v.png'
          },
-         store: {
+         pet_store: {
              name: 'Pet Store',
              icon: 'assets/images/s.png'
          },
-         hospital: {
+         pet_hospital: {
              name: 'Pet Hospital',
              icon: 'assets/images/h.png'
          }
@@ -244,19 +246,19 @@ autocomplete.addListener('place_changed', function() {
 
      var features = [{
         position: new google.maps.LatLng(locations_lat[0], locations_lng[0]),
-        type: 'store' 
+        type: type_selected
         },{
         position: new google.maps.LatLng(locations_lat[1], locations_lng[1]),
-        type: 'store' 
+        type: type_selected
         }, {
         position: new google.maps.LatLng(locations_lat[2], locations_lng[2]),
-        type: 'store' 
+        type: type_selected
         },{
         position: new google.maps.LatLng(locations_lat[3], locations_lng[3]),
-        type: 'store' 
+        type: type_selected
         },{
         position: new google.maps.LatLng(locations_lat[4], locations_lng[4]),
-        type: 'store' 
+        type: type_selected
         }];
 
         features.forEach(function(feature) {
@@ -358,6 +360,14 @@ autocomplete.addListener('place_changed', function() {
   };
 
   function displayData(response) {
+
+    locations_lat = [];
+    locations_lng = [];
+     for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+        }
+
+
     var dataSize = response.listings.length
     console.log(dataSize );
     for (var i = 0; i < 5; i++) {
@@ -371,6 +381,7 @@ autocomplete.addListener('place_changed', function() {
       var phone = response.listings[i].phone.dispNum;
       var geoCode = response.listings[i].geoCode.latitude
         + response.listings[i].geoCode.longitude;
+
       var geoCode_lat = response.listings[i].geoCode.latitude
       var geoCode_lng = response.listings[i].geoCode.longitude;
           locations_lat.push(geoCode_lat);
@@ -423,6 +434,7 @@ autocomplete.addListener('place_changed', function() {
     event.preventDefault();
 
     var inputSelection = $('#selection-input').val();
+    type_selected = $('#selection-input').val().replace(" ", "_");
     var inputAddress = $('#pac-input').val();
     var inputAnimal = $('#animal-select').val();
     if (!inputSelection || !inputAddress || !inputAnimal) {
@@ -443,7 +455,7 @@ autocomplete.addListener('place_changed', function() {
     $('#pac-input').val('');
     $('#distance-input').val('');
     $('#animal-select').val('');
-    });
+  });
 
   function adoptPet() {
     var animal = $('#animal-select').val();
