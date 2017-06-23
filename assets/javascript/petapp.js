@@ -110,6 +110,7 @@ function initMap() {
             position: feature.position,
             icon: icons[feature.type].icon,
             map: map
+
         });
 
         newmarker.addListener('click', function() {
@@ -119,6 +120,8 @@ function initMap() {
 
 
         });
+
+        markers.push(newmarker);
 
     });
     // This creates the legend
@@ -140,6 +143,14 @@ function initMap() {
 // ALSO PLEASE REMEMBER THE GOOGLE MAPS CODE HAS TO BE OUTSIDE OF THE DOCUMENT.READY OR ELSE IT DOESNT WORK
 
 $(document).ready(function() {
+
+
+
+    function redoMap () {
+
+
+    }
+
     var config = {
     apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
     authDomain: "marksinsaneasylum.firebaseapp.com",
