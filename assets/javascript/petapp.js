@@ -126,17 +126,17 @@ function initMap() {
     });
     // This creates the legend
 
-    var legend = document.getElementById("legend");
-    for (var key in icons) {
-        var type = icons[key];
-        var name = type.name;
-        var icon = type.icon;
-        var div = document.createElement('div');
-        div.innerHTML = '<img src="' + icon + '"> ' + name;
-        legend.appendChild(div);
-    }
+    // var legend = document.getElementById("legend");
+    // for (var key in icons) {
+    //     var type = icons[key];
+    //     var name = type.name;
+    //     var icon = type.icon;
+    //     var div = document.createElement('div');
+    //     div.innerHTML = '<img src="' + icon + '"> ' + name;
+    //     legend.appendChild(div);
+    // }
 
-    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+    // map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 }
 
 // THE CODE BELOW IS COMMENTED OUT BECAUSE IT MAKES THE CODE ABOVE MOT WORK
@@ -148,8 +148,154 @@ $(document).ready(function() {
 
     function redoMap () {
 
+ map.setCenter({
 
+ lat: current_lat,
+ lng: current_lng
+    })
+ 
+ map.setZoom(10);
+
+
+ var card = document.getElementById('pac-card');
+ var input = document.getElementById('pac-input');
+ var types = document.getElementById('type-selector');
+ var strictBounds = document.getElementById('strict-bounds-selector');
+ 
+ map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
+ 
+ var autocomplete = new google.maps.places.Autocomplete(input);
+
+
+// Bind the map's bounds (viewport) property to the autocomplete object,
+ // so that the autocomplete requests use the current map bounds for the
+ // bounds option in the request
+
+ autocomplete.bindTo('bounds', map);
+
+
+var infowindow = new google.maps.InfoWindow();
+var infowindowContent = document.getElementById('infowindow-content');
+infowindow.setContent(infowindowContent);
+var marker = new google.maps.Marker({
+map: map,
+anchorPoint: new google.maps.Point(0, -29)
+});
+
+
+autocomplete.addListener('place_changed', function() {
+ infowindow.close();
+ marker.setVisible(false);
+         var place = autocomplete.getPlace();
+       if (!place.geometry) {
+             // User entered the name of a Place that was not suggested and
+             // pressed the Enter key, or the Place Details request failed.
+             window.alert("No details available for input: '" + place.name + "'");
+             return;
+         }
+ 
+         // If the place has a geometry, then present it on a map.
+        if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+         } else {
+             map.setCenter(place.geometry.location);
+             map.setZoom(14); // Why 14? Because it looks good.
+         }
+         marker.setPosition(place.geometry.location);
+        marker.setVisible(true);
+ 
+        var address = '';
+        if (place.address_components) {
+             address = [
+                (place.address_components[0] && place.address_components[0].short_name || ''),
+                 (place.address_components[1] && place.address_components[1].short_name || ''),
+                 (place.address_components[2] && place.address_components[2].short_name || '')
+             ].join(' ');
+         }
+ 
+         infowindowContent.children['place-icon'].src = place.icon;
+         infowindowContent.children['place-name'].textContent = place.name;
+         infowindowContent.children['place-address'].textContent = address;
+         infowindow.open(map, marker);
+     });
+ 
+ 
+     var icons = {
+         grooming: {
+             name: 'Grooming',
+             icon: 'assets/images/g.png'
+         },
+         vet: {
+             name: 'Vet',
+             icon: 'assets/images/v.png'
+         },
+         store: {
+             name: 'Pet Store',
+             icon: 'assets/images/s.png'
+         },
+         hospital: {
+             name: 'Pet Hospital',
+             icon: 'assets/images/h.png'
+         }
+     };
+
+
+
+
+     var features = [{
+        position: new google.maps.LatLng(locations_lat[0], locations_lng[0]),
+        type: 'store' 
+        },{
+        position: new google.maps.LatLng(locations_lat[1], locations_lng[1]),
+        type: 'store' 
+        }, {
+        position: new google.maps.LatLng(locations_lat[2], locations_lng[2]),
+        type: 'store' 
+        },{
+        position: new google.maps.LatLng(locations_lat[3], locations_lng[3]),
+        type: 'store' 
+        },{
+        position: new google.maps.LatLng(locations_lat[4], locations_lng[4]),
+        type: 'store' 
+        }];
+
+        features.forEach(function(feature) {
+        var newmarker = new google.maps.Marker({
+            position: feature.position,
+            icon: icons[feature.type].icon,
+            map: map
+
+        });
+
+        newmarker.addListener('click', function() {
+            console.log("clicked a markr");
+            $("#icon-info").text("Info of this marker");
+            $("#icon-info").css("font-size", "20px");
+
+
+        });
+
+        markers.push(newmarker);
+
+    });
+ 
+        
+
+         var legend = document.getElementById("legend");
+    for (var key in icons) {
+        var type = icons[key];
+        var name = type.name;
+        var icon = type.icon;
+        var div = document.createElement('div');
+        div.innerHTML = '<img src="' + icon + '"> ' + name;
+        legend.appendChild(div);
     }
+
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+
+ 
+ };
+// end of redo map
 
     var config = {
     apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
@@ -225,10 +371,15 @@ $(document).ready(function() {
       var phone = response.listings[i].phone.dispNum;
       var geoCode = response.listings[i].geoCode.latitude
         + response.listings[i].geoCode.longitude;
+      var geoCode_lat = response.listings[i].geoCode.latitude
+      var geoCode_lng = response.listings[i].geoCode.longitude;
+          locations_lat.push(geoCode_lat);
+          locations_lng.push(geoCode_lng);
       var result = $("<p>")
         .html("<u>" + name + "</u>" + "<br>" + "<strong>" + "Address: " + "</strong>" + address + "<br>" + "<strong>" + "Phone: " + "</strong>" + phone + "<br>" + "<strong>" + "<a href=" + resultUrl + ">" + "Website" + "</a>")
         .appendTo($("#displayAPI"));
       };
+      redoMap();
   };
 
   var animal = ['pug', 'cat', 'bunny', 'hamster', 'bird', 'turtle', 'dog', 'horse'];
