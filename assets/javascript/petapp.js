@@ -16,12 +16,14 @@ var legend_created = false;
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
-            lat: 57.598493,
-            lng: -101.825397
+            lat: 49.2827,
+            lng: -123.1207
+
+
             ,
 
         },
-        zoom: 6
+        zoom: 12
     });
     var card = document.getElementById('pac-card');
     var input = document.getElementById('pac-input');
@@ -175,7 +177,7 @@ $(document).ready(function() {
 
     })
  
- map.setZoom(13);
+ map.setZoom(12);
 
 
  var card = document.getElementById('pac-card');
@@ -220,7 +222,7 @@ autocomplete.addListener('place_changed', function() {
             map.fitBounds(place.geometry.viewport);
          } else {
              map.setCenter(place.geometry.location);
-             map.setZoom(14); // Why 14? Because it looks good.
+             map.setZoom(12); // Why 14? Because it looks good.
          }
          marker.setPosition(place.geometry.location);
         marker.setVisible(true);
