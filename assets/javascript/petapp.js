@@ -297,7 +297,7 @@ $(document).ready(function() {
         var geoCode = response.listings[i].geoCode.latitude
           + response.listings[i].geoCode.longitude;
         var result = $("<p>")
-          .html(name + "<br>" + "Address: " + address + "<br>" + "Phone: " + phone + "<br>" + "Website: " + resultUrl)
+          .html("<u>" + name + "</u>" + "<br>" + "<strong>" + "Address: " + "</strong>" + address + "<br>" + "<strong>" + "Phone: " + "</strong>" + phone + "<br>" + "<strong>" + "<a href=" + resultUrl + ">" + "Website" + "</a>")
           .appendTo($("#displayAPI"));
       }
     });
