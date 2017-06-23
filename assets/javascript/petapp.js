@@ -6,6 +6,9 @@ var locations_lng = [];
 var map;
 var markers = [];
 var type_selected;
+var marker;
+var legend;
+var legend_created = false;
 
 
 
@@ -13,11 +16,12 @@ var type_selected;
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
-            lat: 53.7813552,
-            lng: -112.1964913
+            lat: 57.598493,
+            lng: -101.825397
+            ,
 
         },
-        zoom: 4
+        zoom: 6
     });
     var card = document.getElementById('pac-card');
     var input = document.getElementById('pac-input');
@@ -28,6 +32,12 @@ function initMap() {
 
     var autocomplete = new google.maps.places.Autocomplete(input);
 
+    var options = {
+    types: ['(cities)'],
+     componentRestrictions: {country: "canada"}
+ };
+
+
     // Bind the map's bounds (viewport) property to the autocomplete object,
     // so that the autocomplete requests use the current map bounds for the
     // bounds option in the request.
@@ -36,7 +46,7 @@ function initMap() {
     var infowindow = new google.maps.InfoWindow();
     var infowindowContent = document.getElementById('infowindow-content');
     infowindow.setContent(infowindowContent);
-    var marker = new google.maps.Marker({
+    marker = new google.maps.Marker({
         map: map,
         anchorPoint: new google.maps.Point(0, -29)
     });
@@ -126,19 +136,27 @@ function initMap() {
         markers.push(newmarker);
 
     });
-    // This creates the legend
+   
+if (legend_created === false) {
 
-    // var legend = document.getElementById("legend");
-    // for (var key in icons) {
-    //     var type = icons[key];
-    //     var name = type.name;
-    //     var icon = type.icon;
-    //     var div = document.createElement('div');
-    //     div.innerHTML = '<img src="' + icon + '"> ' + name;
-    //     legend.appendChild(div);
-    // }
+legend = document.getElementById("legend");
+    for (var key in icons) {
+        var type = icons[key];
+        var name = type.name;
+        var icon = type.icon;
+        var div = document.createElement('div');
+        div.innerHTML = '<img src="' + icon + '"> ' + name;
+        legend.appendChild(div);
+    }
 
-    // map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+
+
+    legend_created = true;
+    
+    }
+
+
 }
 
 // THE CODE BELOW IS COMMENTED OUT BECAUSE IT MAKES THE CODE ABOVE MOT WORK
@@ -154,9 +172,10 @@ $(document).ready(function() {
 
  lat: current_lat,
  lng: current_lng
+
     })
  
- map.setZoom(10);
+ map.setZoom(13);
 
 
  var card = document.getElementById('pac-card');
@@ -280,24 +299,14 @@ autocomplete.addListener('place_changed', function() {
         markers.push(newmarker);
 
     });
+
  
         
-
-         var legend = document.getElementById("legend");
-    for (var key in icons) {
-        var type = icons[key];
-        var name = type.name;
-        var icon = type.icon;
-        var div = document.createElement('div');
-        div.innerHTML = '<img src="' + icon + '"> ' + name;
-        legend.appendChild(div);
-    }
-
-    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 
  
  };
 // end of redo map
+
 
     var config = {
     apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
@@ -361,11 +370,15 @@ autocomplete.addListener('place_changed', function() {
 
   function displayData(response) {
 
+    console.log("setVisible");
+    marker.setVisible(false);
+
     locations_lat = [];
     locations_lng = [];
      for (var i = 0; i < markers.length; i++) {
           markers[i].setMap(null);
         }
+
 
 
     var dataSize = response.listings.length
