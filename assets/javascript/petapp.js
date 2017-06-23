@@ -322,7 +322,7 @@ autocomplete.addListener('place_changed', function() {
       + "&dist=" + distance
       + "&fmt=JSON&pgLen=5&UID=127.0.0.1"
       + "&apikey=8v2eyjyx79f4m3zcctsyqmxd";
-
+      
     requestCrossDomain(yellow, displayData);
   };
 
@@ -376,7 +376,7 @@ autocomplete.addListener('place_changed', function() {
           locations_lat.push(geoCode_lat);
           locations_lng.push(geoCode_lng);
       var result = $("<p>")
-        .html(name + "<br>" + "Address: " + address + "<br>" + "Phone: " + phone + "<br>" + "Website: " + resultUrl)
+        .html("<u>" + name + "</u>" + "<br>" + "<strong>" + "Address: " + "</strong>" + address + "<br>" + "<strong>" + "Phone: " + "</strong>" + phone + "<br>" + "<strong>" + "<a href=" + resultUrl + ">" + "Website" + "</a>")
         .appendTo($("#displayAPI"));
       };
       redoMap();
