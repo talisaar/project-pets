@@ -6,6 +6,9 @@ var locations_lng = [];
 var map;
 var markers = [];
 var type_selected;
+var marker;
+var legend;
+var legend_created = false;
 
 
 
@@ -36,7 +39,7 @@ function initMap() {
     var infowindow = new google.maps.InfoWindow();
     var infowindowContent = document.getElementById('infowindow-content');
     infowindow.setContent(infowindowContent);
-    var marker = new google.maps.Marker({
+    marker = new google.maps.Marker({
         map: map,
         anchorPoint: new google.maps.Point(0, -29)
     });
@@ -126,19 +129,27 @@ function initMap() {
         markers.push(newmarker);
 
     });
-    // This creates the legend
+   
+if (legend_created === false) {
 
-    // var legend = document.getElementById("legend");
-    // for (var key in icons) {
-    //     var type = icons[key];
-    //     var name = type.name;
-    //     var icon = type.icon;
-    //     var div = document.createElement('div');
-    //     div.innerHTML = '<img src="' + icon + '"> ' + name;
-    //     legend.appendChild(div);
-    // }
+legend = document.getElementById("legend");
+    for (var key in icons) {
+        var type = icons[key];
+        var name = type.name;
+        var icon = type.icon;
+        var div = document.createElement('div');
+        div.innerHTML = '<img src="' + icon + '"> ' + name;
+        legend.appendChild(div);
+    }
 
-    // map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+
+
+    legend_created = true;
+    
+    }
+
+   
 }
 
 // THE CODE BELOW IS COMMENTED OUT BECAUSE IT MAKES THE CODE ABOVE MOT WORK
@@ -154,6 +165,7 @@ $(document).ready(function() {
 
  lat: current_lat,
  lng: current_lng
+
     })
  
  map.setZoom(10);
@@ -280,24 +292,14 @@ autocomplete.addListener('place_changed', function() {
         markers.push(newmarker);
 
     });
+
  
         
-
-         var legend = document.getElementById("legend");
-    for (var key in icons) {
-        var type = icons[key];
-        var name = type.name;
-        var icon = type.icon;
-        var div = document.createElement('div');
-        div.innerHTML = '<img src="' + icon + '"> ' + name;
-        legend.appendChild(div);
-    }
-
-    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 
  
  };
 // end of redo map
+
 
     var config = {
     apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
@@ -361,11 +363,15 @@ autocomplete.addListener('place_changed', function() {
 
   function displayData(response) {
 
+    console.log("setVisible");
+    marker.setVisible(false);
+
     locations_lat = [];
     locations_lng = [];
      for (var i = 0; i < markers.length; i++) {
           markers[i].setMap(null);
         }
+
 
 
     var dataSize = response.listings.length
