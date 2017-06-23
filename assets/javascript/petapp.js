@@ -256,17 +256,17 @@ function initMap() {
 // ALSO PLEASE REMEMBER THE GOOGLE MAPS CODE HAS TO BE OUTSIDE OF THE DOCUMENT.READY OR ELSE IT DOESNT WORK
 
 $(document).ready(function() {
-  //   var config = {
-  //   apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
-  //   authDomain: "marksinsaneasylum.firebaseapp.com",
-  //   databaseURL: "https://marksinsaneasylum.firebaseio.com",
-  //   projectId: "marksinsaneasylum",
-  //   storageBucket: "marksinsaneasylum.appspot.com",
-  //   messagingSenderId: "587854779697"
-  // }
-  //   firebase.initializeApp(config);
-  //   // setting variables
-  //   var database = firebase.database();
+    var config = {
+    apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
+    authDomain: "marksinsaneasylum.firebaseapp.com",
+    databaseURL: "https://marksinsaneasylum.firebaseio.com",
+    projectId: "marksinsaneasylum",
+    storageBucket: "marksinsaneasylum.appspot.com",
+    messagingSenderId: "587854779697"
+  }
+    firebase.initializeApp(config);
+    // setting variables
+    var database = firebase.database();
 
   // this retrieves business data
   function getBizData() {
@@ -336,7 +336,7 @@ $(document).ready(function() {
       };
   };
 
-  var animal = ['pug', 'cat', 'bunny', 'hamster', 'bird', 'turtle', 'dog'];
+  var animal = ['pug', 'cat', 'bunny', 'hamster', 'bird', 'turtle', 'dog', 'horse'];
   function shuffleAnimal(animal) {
     var j = animal.length - 1;
     var k = Math.floor(Math.random() * (j + 1));
@@ -378,7 +378,8 @@ $(document).ready(function() {
 
     var inputSelection = $('#selection-input').val();
     var inputAddress = $('#pac-input').val();
-    if (!inputSelection || !inputAddress) {
+    var inputAnimal = $('#animal-select').val();
+    if (!inputSelection || !inputAddress || !inputAnimal) {
       alertModal('all-inputs');
       return false;
     };
@@ -388,13 +389,39 @@ $(document).ready(function() {
     if (!numberRegex.test(inputDistance)) {
       alertModal('number-inputs');
       return false;
+    }
+    getBizData();
+    adoptPet();
     };
 
-    getBizData();
     // clears form fields after hitting submit, selection is reset to 'void' status
     $('#selection-input').val('');
     $('#pac-input').val('');
     $('#distance-input').val('');
-  })
+    $('#animal-select').val('');
+    });
+
+  function adoptPet() {
+    var animal = $('#animal-select').val();
+    $.getJSON('http://api.petfinder.com/pet.find?format=json&animal='+animal+'&location=94112&key=1606f36e9c6ff9a9664c529cba6adff6&callback=?', function(result) {
+      // console.log(result.petfinder.pets.pet[0].media.photos.photo[3]);
+      var pet = result.petfinder.pets.pet;
+      for (var i = 0; i < pet.length; i++) {
+        // $('#pet-view').prepend(JSON.stringify(result));
+        // console.log(pet[0]);
+        var petDiv = document.createElement('div');
+        petDiv.id = "carousel-image";
+        // petDiv.className += "item";
+        petDiv.className = "item item" + i;
+        var adoptable = pet[i].media.photos.photo[0];
+        var petImg =  $('<img>')
+        .attr('src', adoptable.$t)
+        .addClass('img-carousel')
+        .addClass('center-block');
+        $(petDiv).append(petImg);
+        $('.carousel-inner').append(petDiv);
+      }
+    });
+  }
 
 });
