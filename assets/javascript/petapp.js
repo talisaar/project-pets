@@ -306,7 +306,7 @@ $(document).ready(function() {
 
     // If no url was passed, exit.
     if (!yellow) {
-      alert('No site was passed.');
+      // alert('No site was passed.');
       return false;
     };
 
@@ -323,7 +323,7 @@ $(document).ready(function() {
         // If the user passed a callback, and it
         // is a function, call it, and send through the data var.
         if (typeof callback === 'function') {
-          console.log("madeIt");
+          // console.log("madeIt");
           callback(data.query.results.json);
         }
       }
