@@ -385,7 +385,6 @@ $(document).ready(function() {
         .addClass('center-block');
         $(petDiv).append(petImg);
         $('.carousel-inner').append(petDiv);
-
       }
     });
   }
