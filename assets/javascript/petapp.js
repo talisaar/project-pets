@@ -328,14 +328,14 @@ function clearmap () {
   // this retrieves business data
   function getBizData() {
 
-
+    $("#displayAPI").empty();
 
     var search = $("#selection-input").val();
     var location = $("#pac-input").val();
     var distance = $("#distance-input").val();
-    var queryURL = "http://api.sandbox.yellowapi.com/FindBusiness/?"
-      + "what=" + search
-      + "&where=" + location
+    var yellow = "http://api.sandbox.yellowapi.com/FindBusiness/?"
+      + "what=" + encodeURIComponent(search)
+      + "&where=" + encodeURIComponent(location)
       + "&dist=" + distance
       + "&fmt=JSON&pgLen=5&UID=127.0.0.1"
       + "&apikey=8v2eyjyx79f4m3zcctsyqmxd";
@@ -365,7 +365,58 @@ function clearmap () {
       clearmap();
       redoMap();
     });
+    requestCrossDomain(yellow, displayData);
+  };
 
+  // This section is exclusively for the YQL proxy to run our http api calls over https (to make Github Pages happy).
+  function requestCrossDomain( yellow, callback ) {
+
+    // If no url was passed, exit.
+    if (!yellow) {
+        alert('No site was passed.');
+        return false;
+    };
+
+    // Take the provided url, and add it to a YQL query. Make sure you encode it!
+    var yql = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from json where url="' + yellow + '"') + '&format=json&';
+
+    // Request that YSQL string, and run a callback function.
+    // Pass a defined function to prevent cache-busting.
+    $.getJSON(yql, cbFunc);
+
+    function cbFunc(data) {
+      // If we have something to work with...
+        if (data.query) {
+          // If the user passed a callback, and it
+          // is a function, call it, and send through the data var.
+          if (typeof callback === 'function') {
+              console.log("madeIt");
+              callback(data.query.results.json);
+          }
+        }
+        // Else, Maybe we requested a site that doesn't exist, and nothing returned.
+        else throw new Error('Nothing returned from getJSON.');
+      };
+  };
+
+  function displayData(response) {
+    var dataSize = response.listings.length
+    console.log(dataSize );
+    for (var i = 0; i < 5; i++) {
+      getGiphy();
+      var name = response.listings[i].name;
+      var address = response.listings[i].address.street
+        + response.listings[i].address.city
+        + response.listings[i].address.pcode
+        + response.listings[i].address.prov;
+      var resultUrl = response.listings[i].merchantUrl;
+      var phone = response.listings[i].phone.dispNum;
+      var geoCode = response.listings[i].geoCode.latitude
+        + response.listings[i].geoCode.longitude;
+      var result = $("<p>")
+        .html(name + "<br>" + "Address: " + address + "<br>" + "Phone: " + phone + "<br>" + "Website: " + resultUrl)
+        .appendTo($("#displayAPI"));
+      };
   };
 
   var animal = ['pug', 'cat', 'bunny', 'hamster', 'bird', 'turtle', 'dog'];
@@ -376,6 +427,7 @@ function clearmap () {
   }
 
   function getGiphy() {
+    $("#displayGif").empty();
     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + shuffleAnimal(animal) + "&limit=100&api_key=dc6zaTOxFJmzC";
     $.ajax({
         url: queryURL,
@@ -402,7 +454,7 @@ function clearmap () {
     $('#myModal .close').on('click', function() {
       $('#myModal').hide();
     })
-  }
+  };
 
   $('#submit-Info').on('click', function(event) {
     event.preventDefault();
@@ -421,7 +473,7 @@ function clearmap () {
     if (!numberRegex.test(inputDistance)) {
       alertModal('number-inputs');
       return false;
-    }
+    };
 
     getBizData();
     // clears form fields after hitting submit, selection is reset to 'void' status
