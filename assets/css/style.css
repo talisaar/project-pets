@@ -1,18 +1,69 @@
+
+
+.navbar {
+  height: 150px;
+}
+
+.img-responsive {
+  margin-top: 0;
+  border-radius: 180px;
+  height: 150px;
+  width: 300px;
+}
+/*body {
+
 #map {
   height: 400px;
   width: 600px;
   float: left;
   margin: 5px;
+  display: flex;
+}*/
+.container {
+  border: 5px solid lightcoral;
+  height: 100vh;
+  -ms-box-orient: horizontal;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
 }
 
+.well {
+  height: 500px;
+  width: 500px;
+  margin: 5px;
+  /*align-items: center;*/
+  /*align-content: center;*/
+  /*justify-content: center;*/
+  -webkit-flex-direction: row;
+  -webkit-flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+h1 {
+  float: top;
+  font-size: 40px;
+  font-family: 'Luckiest Guy', cursive;
+  color: red;
+}
+
+ #map {
+  height: 500px;
+  width: 500px;
+} 
 
 #legend {
   font-family: Arial, sans-serif;
   background: #fff;
   padding: 10px;
   margin: 10px;
-  border: 3px solid #000;
+  border: 3px;
 }
+
 #legend h3 {
   margin-top: 0;
 }
@@ -20,53 +71,39 @@
   vertical-align: middle;
 }
 
-h1 {
-  text-align: center;
-  color: white;
-  padding: 20px;
-  background-color: green;
-  border-style: solid;
-  border-color: blue;
-  border-width: 5px;
+/* #icon-info {
+  height: 500px;
+  width: 500px;
+} */
+
+/* #user-input {
+  width: 500px;
+  height: 500px;
+}*/
+
+.btn-primary {
+  background-color: #2f6d66 !important;
 }
 
-#icon-info {
-  background-color: cornflowerblue;
-  width: 400px;
-  height: 400px;
-  float: left;
-  margin: 5px;
-}
-
-#user-input {
-  background-color: turquoise;
-  width: 600px;
-  height: 400px;
-  float: left;
-  margin: 5px;
+/* #search-results {
+  width: 500px;
+  height: 500px;
+} */
+/*#submit-Info {
   position: relative;
-}
-
-#search-results {
-  background-color: red;
-  width: 400px;
-  height: 400px;
-  float: left;
-  margin: 5px;
-}
-#submit-Info {
-  position: absolute;
   margin-left: 10px;
-
-}
+}*/
 
 #dropdownMenu1 {
-  margin-top: 10px;
+  margin: auto;
 }
 
-.row {
-  margin-left: 10px !important;
+#address-input {
+  margin:auto;
 }
+/*.column {
+  margin-left: 10px !important;
+}*/
 
 #selection-input {
   margin-top: 30px;
