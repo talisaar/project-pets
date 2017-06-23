@@ -447,7 +447,7 @@ autocomplete.addListener('place_changed', function() {
 
   function adoptPet() {
     var animal = $('#animal-select').val();
-    $.getJSON('http://api.petfinder.com/pet.find?format=json&animal='+animal+'&location=94112&key=1606f36e9c6ff9a9664c529cba6adff6&callback=?', function(result) {
+    $.getJSON('https://api.petfinder.com/pet.find?format=json&animal='+animal+'&location=94112&key=1606f36e9c6ff9a9664c529cba6adff6&callback=?', function(result) {
       // console.log(result.petfinder.pets.pet[0].media.photos.photo[3]);
       var pet = result.petfinder.pets.pet;
       for (var i = 0; i < pet.length; i++) {
