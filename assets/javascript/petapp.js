@@ -306,13 +306,14 @@ $(document).ready(function() {
         petDiv.id = "carousel-image";
         // petDiv.className += "item";
         petDiv.className = "item item" + i;
-        var adoptable = pet[i].media.photos.photo[0];
+        var adoptable = pet[i].media.photos.photo[2];
         var petImg =  $('<img>')
         .attr('src', adoptable.$t)
         .addClass('img-carousel')
         .addClass('center-block');
         $(petDiv).append(petImg);
         $('.carousel-inner').append(petDiv);
+        console.log(adoptable);
       }
     });
   }
