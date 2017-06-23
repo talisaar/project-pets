@@ -176,7 +176,7 @@ $(document).ready(function() {
       + "&dist=" + distance
       + "&fmt=JSON&pgLen=5&UID=127.0.0.1"
       + "&apikey=8v2eyjyx79f4m3zcctsyqmxd";
-
+      
     requestCrossDomain(yellow, displayData);
   };
 
@@ -226,7 +226,7 @@ $(document).ready(function() {
       var geoCode = response.listings[i].geoCode.latitude
         + response.listings[i].geoCode.longitude;
       var result = $("<p>")
-        .html(name + "<br>" + "Address: " + address + "<br>" + "Phone: " + phone + "<br>" + "Website: " + resultUrl)
+        .html("<u>" + name + "</u>" + "<br>" + "<strong>" + "Address: " + "</strong>" + address + "<br>" + "<strong>" + "Phone: " + "</strong>" + phone + "<br>" + "<strong>" + "<a href=" + resultUrl + ">" + "Website" + "</a>")
         .appendTo($("#displayAPI"));
       };
   };
