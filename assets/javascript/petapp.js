@@ -31,6 +31,12 @@ function initMap() {
 
     var autocomplete = new google.maps.places.Autocomplete(input);
 
+    var options = {
+    types: ['(cities)'],
+     componentRestrictions: {country: "canada"}
+ };
+
+
     // Bind the map's bounds (viewport) property to the autocomplete object,
     // so that the autocomplete requests use the current map bounds for the
     // bounds option in the request.
@@ -149,7 +155,7 @@ legend = document.getElementById("legend");
     
     }
 
-   
+
 }
 
 // THE CODE BELOW IS COMMENTED OUT BECAUSE IT MAKES THE CODE ABOVE MOT WORK
