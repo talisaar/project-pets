@@ -1,5 +1,13 @@
+var current_lat;
+var current_lng;
+var locations_lat = [];
+var locations_lng = [];
+
+var map;
+
+
 function initMap() {
-    var map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById('map'), {
         center: {
             lat: 53.7813552,
             lng: -112.1964913
@@ -28,6 +36,7 @@ function initMap() {
         anchorPoint: new google.maps.Point(0, -29)
     });
 
+
     autocomplete.addListener('place_changed', function() {
         infowindow.close();
         marker.setVisible(false);
@@ -58,6 +67,10 @@ function initMap() {
             ].join(' ');
         }
 
+        current_lat = marker.position.lat();
+        current_lng = marker.position.lng();
+
+
         infowindowContent.children['place-icon'].src = place.icon;
         infowindowContent.children['place-name'].textContent = place.name;
         infowindowContent.children['place-address'].textContent = address;
@@ -87,32 +100,17 @@ function initMap() {
     // Store pins you want to display as object with a position and type - where type is the object name of the icon
 
     var features = [{
-        position: new google.maps.LatLng(37.7749, -122.4194),
-        type: 'store'
-    }, {
-        position: new google.maps.LatLng(37.7749, -122.4294),
-        type: 'store'
-    }, {
-        position: new google.maps.LatLng(37.7749, -122.4094),
-        type: 'store'
-    }, {
-        position: new google.maps.LatLng(37.7649, -122.4194),
-        type: 'hospital'
-    }, {
-        position: new google.maps.LatLng(37.7749, -122.4157),
-        type: 'hospital'
-    }, {
-        position: new google.maps.LatLng(37.7749, -122.4194),
-        type: 'hospital'
-    }, {
-        position: new google.maps.LatLng(37.7849, -122.4194),
-        type: 'vet'
-    }, {
-        position: new google.maps.LatLng(37.7749, -122.4194),
-        type: 'vet'
-    }, {
-        position: new google.maps.LatLng(37.7749, -122.4250),
-        type: 'grooming'
+    //     position: new google.maps.LatLng(37.7749, -122.4194),
+    //     type: 'store'
+    // }, {
+    //     position: new google.maps.LatLng(37.7749, -122.4194),
+    //     type: 'hospital'
+    // }, {
+    //     position: new google.maps.LatLng(37.7849, -122.4194),
+    //     type: 'vet'
+    // }, {
+    //     position: new google.maps.LatLng(37.7749, -122.4250),
+    //     type: 'grooming'
     }];
 
     // for each of the objects in the features list create a marker with the objects position and icon
@@ -133,19 +131,19 @@ function initMap() {
         });
 
     });
-    // This creates the legend
+   // This creates the legend
 
-    var legend = document.getElementById("legend");
-    for (var key in icons) {
-        var type = icons[key];
-        var name = type.name;
-        var icon = type.icon;
-        var div = document.createElement('div');
-        div.innerHTML = '<img src="' + icon + '"> ' + name;
-        legend.appendChild(div);
-    }
+    // var legend = document.getElementById("legend");
+    // for (var key in icons) {
+    //     var type = icons[key];
+    //     var name = type.name;
+    //     var icon = type.icon;
+    //     var div = document.createElement('div');
+    //     div.innerHTML = '<img src="' + icon + '"> ' + name;
+    //     legend.appendChild(div);
+    // }
 
-    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+    // map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 
 }
 
@@ -156,15 +154,23 @@ function initMap() {
 $(document).ready(function() {
 
 
-
 function redoMap() {
-    var map = new google.maps.Map(document.getElementById('map'), {
-        center: {
-            lat: 37.7749,
-            lng: -122.4194
-        },
-        zoom: 14
-    });
+
+
+
+    console.log(map);
+    map.setCenter({
+        lat: current_lat,
+        lng: current_lng
+    })
+    map.setZoom(10);
+    // var map = new google.maps.Map(document.getElementById('map'), {
+    //     center: {
+    //         lat: current_lat,
+    //         lng: current_lng
+    //     },
+    //     zoom: 14
+    // });
     var card = document.getElementById('pac-card');
     var input = document.getElementById('pac-input');
     var types = document.getElementById('type-selector');
@@ -187,6 +193,7 @@ function redoMap() {
         anchorPoint: new google.maps.Point(0, -29)
     });
 
+
     autocomplete.addListener('place_changed', function() {
         infowindow.close();
         marker.setVisible(false);
@@ -246,32 +253,20 @@ function redoMap() {
     // Store pins you want to display as object with a position and type - where type is the object name of the icon
 
     var features = [{
-        position: new google.maps.LatLng(37.7749, -122.4194),
+        position: new google.maps.LatLng(locations_lat[0], locations_lng[0]),
         type: 'store'
     }, {
-        position: new google.maps.LatLng(37.7749, -122.4294),
+        position: new google.maps.LatLng(locations_lat[1], locations_lng[1]),
         type: 'store'
     }, {
-        position: new google.maps.LatLng(37.7749, -122.4094),
+        position: new google.maps.LatLng(locations_lat[2], locations_lng[2]),
         type: 'store'
     }, {
-        position: new google.maps.LatLng(37.7649, -122.4194),
+        position: new google.maps.LatLng(locations_lat[3], locations_lng[3]),
         type: 'hospital'
     }, {
-        position: new google.maps.LatLng(37.7749, -122.4157),
+        position: new google.maps.LatLng(locations_lat[4], locations_lng[4]),
         type: 'hospital'
-    }, {
-        position: new google.maps.LatLng(37.7749, -122.4194),
-        type: 'hospital'
-    }, {
-        position: new google.maps.LatLng(37.7849, -122.4194),
-        type: 'vet'
-    }, {
-        position: new google.maps.LatLng(37.7749, -122.4194),
-        type: 'vet'
-    }, {
-        position: new google.maps.LatLng(37.7749, -122.4250),
-        type: 'grooming'
     }];
 
     // for each of the objects in the features list create a marker with the objects position and icon
@@ -291,8 +286,10 @@ function redoMap() {
 
         });
 
+        console.log(feature.position);
+
     });
-    // This creates the legend
+
 
     var legend = document.getElementById("legend");
     for (var key in icons) {
@@ -301,12 +298,19 @@ function redoMap() {
         var icon = type.icon;
         var div = document.createElement('div');
         div.innerHTML = '<img src="' + icon + '"> ' + name;
+        legend.style.borderColor = "black";
         legend.appendChild(div);
     }
 
     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+   
+} // end of reDo map
 
-}
+function clearmap () {
+
+
+
+};
 
 
   //   var config = {
@@ -323,6 +327,9 @@ function redoMap() {
 
   // this retrieves business data
   function getBizData() {
+
+
+
     var search = $("#selection-input").val();
     var location = $("#pac-input").val();
     var distance = $("#distance-input").val();
@@ -347,12 +354,16 @@ function redoMap() {
           + response.listings[i].address.prov;
         var resultUrl = response.listings[i].merchantUrl;
         var phone = response.listings[i].phone.dispNum;
-        var geoCode = response.listings[i].geoCode.latitude
-          + response.listings[i].geoCode.longitude;
+        var geoCode_lat = response.listings[i].geoCode.latitude
+        var geoCode_lng = response.listings[i].geoCode.longitude;
+        locations_lat.push(geoCode_lat);
+        locations_lng.push(geoCode_lng);
         var result = $("<p>")
           .html(name + "<br>" + "Address: " + address + "<br>" + "Phone: " + phone + "<br>" + "Website: " + resultUrl)
           .appendTo($("#displayAPI"));
       }
+      clearmap();
+      redoMap();
     });
 
   };
@@ -396,6 +407,8 @@ function redoMap() {
   $('#submit-Info').on('click', function(event) {
     event.preventDefault();
 
+
+
     var inputSelection = $('#selection-input').val();
     var inputAddress = $('#pac-input').val();
     if (!inputSelection || !inputAddress) {
@@ -416,7 +429,7 @@ function redoMap() {
     $('#pac-input').val('');
     $('#distance-input').val('');
 
-    redoMap();
+
 
   })
 
