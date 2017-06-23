@@ -256,26 +256,28 @@ function initMap() {
 // ALSO PLEASE REMEMBER THE GOOGLE MAPS CODE HAS TO BE OUTSIDE OF THE DOCUMENT.READY OR ELSE IT DOESNT WORK
 
 $(document).ready(function() {
-  //   var config = {
-  //   apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
-  //   authDomain: "marksinsaneasylum.firebaseapp.com",
-  //   databaseURL: "https://marksinsaneasylum.firebaseio.com",
-  //   projectId: "marksinsaneasylum",
-  //   storageBucket: "marksinsaneasylum.appspot.com",
-  //   messagingSenderId: "587854779697"
-  // }
-  //   firebase.initializeApp(config);
-  //   // setting variables
-  //   var database = firebase.database();
+    var config = {
+    apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
+    authDomain: "marksinsaneasylum.firebaseapp.com",
+    databaseURL: "https://marksinsaneasylum.firebaseio.com",
+    projectId: "marksinsaneasylum",
+    storageBucket: "marksinsaneasylum.appspot.com",
+    messagingSenderId: "587854779697"
+  }
+    firebase.initializeApp(config);
+    // setting variables
+    var database = firebase.database();
 
   // this retrieves business data
   function getBizData() {
+    $("#displayAPI").empty();
+
     var search = $("#selection-input").val();
     var location = $("#pac-input").val();
     var distance = $("#distance-input").val();
-    var queryURL = "http://api.sandbox.yellowapi.com/FindBusiness/?"
-      + "what=" + search
-      + "&where=" + location
+    var yellow = "http://api.sandbox.yellowapi.com/FindBusiness/?"
+      + "what=" + encodeURIComponent(search)
+      + "&where=" + encodeURIComponent(location)
       + "&dist=" + distance
       + "&fmt=JSON&pgLen=5&UID=127.0.0.1"
       + "&apikey=8v2eyjyx79f4m3zcctsyqmxd";
@@ -301,10 +303,61 @@ $(document).ready(function() {
           .appendTo($("#displayAPI"));
       }
     });
-
+    requestCrossDomain(yellow, displayData);
   };
 
-  var animal = ['pug', 'cat', 'bunny', 'hamster', 'bird', 'turtle', 'dog'];
+  // This section is exclusively for the YQL proxy to run our http api calls over https (to make Github Pages happy).
+  function requestCrossDomain( yellow, callback ) {
+
+    // If no url was passed, exit.
+    if (!yellow) {
+        alert('No site was passed.');
+        return false;
+    };
+
+    // Take the provided url, and add it to a YQL query. Make sure you encode it!
+    var yql = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from json where url="' + yellow + '"') + '&format=json&';
+
+    // Request that YSQL string, and run a callback function.
+    // Pass a defined function to prevent cache-busting.
+    $.getJSON(yql, cbFunc);
+
+    function cbFunc(data) {
+      // If we have something to work with...
+        if (data.query) {
+          // If the user passed a callback, and it
+          // is a function, call it, and send through the data var.
+          if (typeof callback === 'function') {
+              console.log("madeIt");
+              callback(data.query.results.json);
+          }
+        }
+        // Else, Maybe we requested a site that doesn't exist, and nothing returned.
+        else throw new Error('Nothing returned from getJSON.');
+      };
+  };
+
+  function displayData(response) {
+    var dataSize = response.listings.length
+    console.log(dataSize );
+    for (var i = 0; i < 5; i++) {
+      getGiphy();
+      var name = response.listings[i].name;
+      var address = response.listings[i].address.street
+        + response.listings[i].address.city
+        + response.listings[i].address.pcode
+        + response.listings[i].address.prov;
+      var resultUrl = response.listings[i].merchantUrl;
+      var phone = response.listings[i].phone.dispNum;
+      var geoCode = response.listings[i].geoCode.latitude
+        + response.listings[i].geoCode.longitude;
+      var result = $("<p>")
+        .html(name + "<br>" + "Address: " + address + "<br>" + "Phone: " + phone + "<br>" + "Website: " + resultUrl)
+        .appendTo($("#displayAPI"));
+      };
+  };
+
+  var animal = ['pug', 'cat', 'bunny', 'hamster', 'bird', 'turtle', 'dog', 'horse'];
   function shuffleAnimal(animal) {
     var j = animal.length - 1;
     var k = Math.floor(Math.random() * (j + 1));
@@ -312,6 +365,7 @@ $(document).ready(function() {
   }
 
   function getGiphy() {
+    $("#displayGif").empty();
     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + shuffleAnimal(animal) + "&limit=100&api_key=dc6zaTOxFJmzC";
     $.ajax({
         url: queryURL,
@@ -338,14 +392,15 @@ $(document).ready(function() {
     $('#myModal .close').on('click', function() {
       $('#myModal').hide();
     })
-  }
+  };
 
   $('#submit-Info').on('click', function(event) {
     event.preventDefault();
 
     var inputSelection = $('#selection-input').val();
     var inputAddress = $('#pac-input').val();
-    if (!inputSelection || !inputAddress) {
+    var inputAnimal = $('#animal-select').val();
+    if (!inputSelection || !inputAddress || !inputAnimal) {
       alertModal('all-inputs');
       return false;
     };
@@ -356,12 +411,38 @@ $(document).ready(function() {
       alertModal('number-inputs');
       return false;
     }
+    getBizData();
+    adoptPet();
+    };
 
-    getBizData()
     // clears form fields after hitting submit, selection is reset to 'void' status
     $('#selection-input').val('');
     $('#pac-input').val('');
     $('#distance-input').val('');
-  })
+    $('#animal-select').val('');
+    });
+
+  function adoptPet() {
+    var animal = $('#animal-select').val();
+    $.getJSON('http://api.petfinder.com/pet.find?format=json&animal='+animal+'&location=94112&key=1606f36e9c6ff9a9664c529cba6adff6&callback=?', function(result) {
+      // console.log(result.petfinder.pets.pet[0].media.photos.photo[3]);
+      var pet = result.petfinder.pets.pet;
+      for (var i = 0; i < pet.length; i++) {
+        // $('#pet-view').prepend(JSON.stringify(result));
+        // console.log(pet[0]);
+        var petDiv = document.createElement('div');
+        petDiv.id = "carousel-image";
+        // petDiv.className += "item";
+        petDiv.className = "item item" + i;
+        var adoptable = pet[i].media.photos.photo[0];
+        var petImg =  $('<img>')
+        .attr('src', adoptable.$t)
+        .addClass('img-carousel')
+        .addClass('center-block');
+        $(petDiv).append(petImg);
+        $('.carousel-inner').append(petDiv);
+      }
+    });
+  }
 
 });
