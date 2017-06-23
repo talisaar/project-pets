@@ -16,11 +16,12 @@ var legend_created = false;
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
-            lat: 53.7813552,
-            lng: -112.1964913
+            lat: 57.598493,
+            lng: -101.825397
+            ,
 
         },
-        zoom: 4
+        zoom: 6
     });
     var card = document.getElementById('pac-card');
     var input = document.getElementById('pac-input');
@@ -174,7 +175,7 @@ $(document).ready(function() {
 
     })
  
- map.setZoom(10);
+ map.setZoom(13);
 
 
  var card = document.getElementById('pac-card');
