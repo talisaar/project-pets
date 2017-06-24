@@ -378,7 +378,7 @@ autocomplete.addListener('place_changed', function() {
       getGiphy();
       var name = response.listings[i].name;
       var address = response.listings[i].address.street + (" ")
-        + response.listings[i].address.city + (" ")
+        + response.listings[i].address.city + ("")
         + response.listings[i].address.pcode
         + response.listings[i].address.prov;
       var resultUrl = response.listings[i].merchantUrl;
