@@ -17,8 +17,10 @@ function initMap() {
         center: {
             lat: 57.598493,
             lng: -101.825397,
+            ,
+
         },
-        zoom: 6
+        zoom: 12
     });
     var card = document.getElementById('pac-card');
     var input = document.getElementById('pac-input');
@@ -170,6 +172,8 @@ $(document).ready(function() {
    var types = document.getElementById('type-selector');
    var strictBounds = document.getElementById('strict-bounds-selector');
 
+ map.setZoom(12);
+
    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
 
    var autocomplete = new google.maps.places.Autocomplete(input);
@@ -207,7 +211,7 @@ autocomplete.addListener('place_changed', function() {
             map.fitBounds(place.geometry.viewport);
          } else {
              map.setCenter(place.geometry.location);
-             map.setZoom(14); // Why 14? Because it looks good.
+             map.setZoom(12); // Why 14? Because it looks good.
          }
          marker.setPosition(place.geometry.location);
         marker.setVisible(true);
