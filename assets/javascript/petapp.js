@@ -9,18 +9,14 @@ var type_selected;
 var marker;
 var legend;
 var legend_created = false;
-
-
-
+var business = [];
+var merchant = {};
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
-            lat: 49.2827,
-            lng: -123.1207
-
-
-            ,
+            lat: 57.598493,
+            lng: -101.825397,
 
         },
         zoom: 12
@@ -38,7 +34,6 @@ function initMap() {
     types: ['(cities)'],
      componentRestrictions: {country: "canada"}
  };
-
 
     // Bind the map's bounds (viewport) property to the autocomplete object,
     // so that the autocomplete requests use the current map bounds for the
@@ -131,14 +126,10 @@ function initMap() {
             console.log("clicked a markr");
             $("#icon-info").text("Info of this marker");
             $("#icon-info").css("font-size", "20px");
-
-
         });
-
         markers.push(newmarker);
-
     });
-   
+
 if (legend_created === false) {
 
 legend = document.getElementById("legend");
@@ -153,11 +144,9 @@ legend = document.getElementById("legend");
 
     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
 
-
     legend_created = true;
-    
-    }
 
+    }
 
 }
 
@@ -166,35 +155,34 @@ legend = document.getElementById("legend");
 
 $(document).ready(function() {
 
+  function redoMap () {
 
+   map.setCenter({
 
-    function redoMap () {
+  lat: current_lat,
+  lng: current_lng
 
- map.setCenter({
+  })
 
- lat: current_lat,
- lng: current_lng
+   map.setZoom(13);
 
-    })
- 
+   var card = document.getElementById('pac-card');
+   var input = document.getElementById('pac-input');
+   var types = document.getElementById('type-selector');
+   var strictBounds = document.getElementById('strict-bounds-selector');
+
  map.setZoom(12);
 
+   map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
 
- var card = document.getElementById('pac-card');
- var input = document.getElementById('pac-input');
- var types = document.getElementById('type-selector');
- var strictBounds = document.getElementById('strict-bounds-selector');
- 
- map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
- 
- var autocomplete = new google.maps.places.Autocomplete(input);
+   var autocomplete = new google.maps.places.Autocomplete(input);
 
 
 // Bind the map's bounds (viewport) property to the autocomplete object,
  // so that the autocomplete requests use the current map bounds for the
  // bounds option in the request
 
- autocomplete.bindTo('bounds', map);
+autocomplete.bindTo('bounds', map);
 
 
 var infowindow = new google.maps.InfoWindow();
@@ -216,7 +204,7 @@ autocomplete.addListener('place_changed', function() {
              window.alert("No details available for input: '" + place.name + "'");
              return;
          }
- 
+
          // If the place has a geometry, then present it on a map.
         if (place.geometry.viewport) {
             map.fitBounds(place.geometry.viewport);
@@ -226,7 +214,7 @@ autocomplete.addListener('place_changed', function() {
          }
          marker.setPosition(place.geometry.location);
         marker.setVisible(true);
- 
+
         var address = '';
         if (place.address_components) {
              address = [
@@ -235,14 +223,13 @@ autocomplete.addListener('place_changed', function() {
                  (place.address_components[2] && place.address_components[2].short_name || '')
              ].join(' ');
          }
- 
+
          infowindowContent.children['place-icon'].src = place.icon;
          infowindowContent.children['place-name'].textContent = place.name;
          infowindowContent.children['place-address'].textContent = address;
          infowindow.open(map, marker);
      });
- 
- 
+
      var icons = {
          pet_grooming: {
              name: 'Grooming',
@@ -262,65 +249,72 @@ autocomplete.addListener('place_changed', function() {
          }
      };
 
+     // var features = [{
+     //    position: new google.maps.LatLng(business[0].geoCode_lat, business[0].geoCode_lng),
+     //    type: type_selected
+     //    },{
+     //    position: new google.maps.LatLng(business[1].geoCode_lat, business[1].geoCode_lng),
+     //    type: type_selected
+     //    }, {
+     //    position: new google.maps.LatLng(business[2].geoCode_lat, business[2].geoCode_lng),
+     //    type: type_selected
+     //    },{
+     //    position: new google.maps.LatLng(business[3].geoCode_lat, business[3].geoCode_lng),
+     //    type: type_selected
+     //    },{
+     //    position: new google.maps.LatLng(business[4].geoCode_lat, business[4].geoCode_lng),
+     //    type: type_selected
+     //    }];
 
+     //    features.forEach(function(feature) {
+     //    var newmarker = new google.maps.Marker({
+     //        position: feature.position,
+     //        icon: icons[feature.type].icon,
+     //        map: map
+     //    });
 
-
-     var features = [{
-        position: new google.maps.LatLng(locations_lat[0], locations_lng[0]),
-        type: type_selected
-        },{
-        position: new google.maps.LatLng(locations_lat[1], locations_lng[1]),
-        type: type_selected
-        }, {
-        position: new google.maps.LatLng(locations_lat[2], locations_lng[2]),
-        type: type_selected
-        },{
-        position: new google.maps.LatLng(locations_lat[3], locations_lng[3]),
-        type: type_selected
-        },{
-        position: new google.maps.LatLng(locations_lat[4], locations_lng[4]),
-        type: type_selected
-        }];
-
-        features.forEach(function(feature) {
-        var newmarker = new google.maps.Marker({
-            position: feature.position,
-            icon: icons[feature.type].icon,
+        // attaching name, icon, address, etc to each marker
+        for (var i = 0; i < 5; i++){
+          var position = new google.maps.LatLng(business[i].geoCode_lat, business[i].geoCode_lng)
+          var newmarker = new google.maps.Marker({
+            position: position,
+            icon: icons[type_selected].icon,
+            name: business[i].name,
+            address: business[i].address,
+            phone: business[i].phone,
+            resultUrl: business[i].resultUrl,
             map: map
+          });
 
-        });
-
+        // on click listener to grab merchants info, saving 'clicked' marker into firebase
         newmarker.addListener('click', function() {
-            console.log("clicked a markr");
-            $("#icon-info").text("Info of this marker");
-            $("#icon-info").css("font-size", "20px");
-
-
+            var merchants = {
+              name: this.name,
+              address: this.address,
+              phone: this.phone,
+              webpage: this.resultUrl
+            }
+            database.ref('merchants').push(merchants);
         });
 
         markers.push(newmarker);
 
-    });
-
- 
-        
-
- 
+    };
  };
 // end of redo map
 
-
-    var config = {
-    apiKey: "AIzaSyCQ__vhHShTpCE-GENvH5K9jv8bX4iUdXg",
-    authDomain: "marksinsaneasylum.firebaseapp.com",
-    databaseURL: "https://marksinsaneasylum.firebaseio.com",
-    projectId: "marksinsaneasylum",
-    storageBucket: "marksinsaneasylum.appspot.com",
-    messagingSenderId: "587854779697"
-  }
-    firebase.initializeApp(config);
+  // setting firebase configurations
+  var config = {
+    apiKey: "AIzaSyBDtNjucWDga7GKDVepB2m7n_JxXP31ASo",
+    authDomain: "hacker-tails.firebaseapp.com",
+    databaseURL: "https://hacker-tails.firebaseio.com",
+    projectId: "hacker-tails",
+    storageBucket: "hacker-tails.appspot.com",
+    messagingSenderId: "519408053795"
+  };
+  firebase.initializeApp(config);
     // setting variables
-    var database = firebase.database();
+  var database = firebase.database();
 
   // this retrieves business data
   function getBizData() {
@@ -335,7 +329,7 @@ autocomplete.addListener('place_changed', function() {
       + "&dist=" + distance
       + "&fmt=JSON&pgLen=5&UID=127.0.0.1"
       + "&apikey=8v2eyjyx79f4m3zcctsyqmxd";
-      
+
     requestCrossDomain(yellow, displayData);
   };
 
@@ -361,7 +355,7 @@ autocomplete.addListener('place_changed', function() {
           // If the user passed a callback, and it
           // is a function, call it, and send through the data var.
           if (typeof callback === 'function') {
-              console.log("madeIt");
+              // console.log("madeIt");
               callback(data.query.results.json);
           }
         }
@@ -372,7 +366,7 @@ autocomplete.addListener('place_changed', function() {
 
   function displayData(response) {
 
-    console.log("setVisible");
+    // console.log("setVisible");
     marker.setVisible(false);
 
     locations_lat = [];
@@ -381,15 +375,13 @@ autocomplete.addListener('place_changed', function() {
           markers[i].setMap(null);
         }
 
-
-
     var dataSize = response.listings.length
-    console.log(dataSize );
+    // console.log(dataSize );
     for (var i = 0; i < 5; i++) {
       getGiphy();
       var name = response.listings[i].name;
-      var address = response.listings[i].address.street
-        + response.listings[i].address.city
+      var address = response.listings[i].address.street + (" ")
+        + response.listings[i].address.city + ("")
         + response.listings[i].address.pcode
         + response.listings[i].address.prov;
       var resultUrl = response.listings[i].merchantUrl;
@@ -401,20 +393,34 @@ autocomplete.addListener('place_changed', function() {
       var geoCode_lng = response.listings[i].geoCode.longitude;
           locations_lat.push(geoCode_lat);
           locations_lng.push(geoCode_lng);
-      var result = $("<p>")
-        .html("<u>" + name + "</u>" + "<br>" + "<strong>" + "Address: " + "</strong>" + address + "<br>" + "<strong>" + "Phone: " + "</strong>" + phone + "<br>" + "<strong>" + "<a href=" + resultUrl + ">" + "Website" + "</a>")
+      // creating a merchant object for google maps
+      merchant = {
+        name: name,
+        address: address,
+        resultUrl: resultUrl,
+        phone: phone,
+        geoCode_lat: geoCode_lat,
+        geoCode_lng: geoCode_lng
+        }
+      // pushing merchant object into business array
+      business.push(merchant);
+
+      var result = $("<p id='businessInfo'>")
+        .html("<u id='busName'>" + name + "</u>" + "<br>" + "<strong>" + "Address: " + "</strong>" + "<u id='busAddress'>" + address + "</u>" + "<br>" + "<strong>" + "Phone: " + "</strong>" + "<u id='busPhone'>" + phone + "</u>" + "<br>" + "<strong>" + "<a target='_blank' id='busWebsite' href=" + resultUrl + ">" + "Website" + "</a>")
         .appendTo($("#displayAPI"));
       };
       redoMap();
   };
-
+  // hard coding animals due to bad potential gif results
   var animal = ['pug', 'cat', 'bunny', 'hamster', 'bird', 'turtle', 'dog', 'horse'];
+  // shuffling the animal array
   function shuffleAnimal(animal) {
     var j = animal.length - 1;
     var k = Math.floor(Math.random() * (j + 1));
     return animal[k];
   }
 
+  // ajax call to giphy api, randomly passing in an animal search query
   function getGiphy() {
     $("#displayGif").empty();
     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + shuffleAnimal(animal) + "&limit=100&api_key=dc6zaTOxFJmzC";
@@ -424,6 +430,7 @@ autocomplete.addListener('place_changed', function() {
     }).done(function(response) {
       $('#displayGifs').prepend(JSON.stringify(response));
       var selectionDiv = $('<div id="selectionData">');
+      // randomly pulling gifs, so we dont always return the same gifs
       var i = Math.floor(Math.random() * 100);
       var gif = response.data[i].images.fixed_height.url;
       var displayGiffy = $('<img>')
@@ -435,29 +442,34 @@ autocomplete.addListener('place_changed', function() {
   }
 
   function alertModal(input) {
+    // setting modal to hidden status
     $('[data-modal-option]').hide();
+    // passes through the input to correctly pick the right modal
     $('.modal-' + input).show();
-
+    // shows the correct modal
     $('#myModal').show();
-
+    // sets the x button to close the modal, and closes the modal
     $('#myModal .close').on('click', function() {
       $('#myModal').hide();
     })
   };
 
   $('#submit-Info').on('click', function(event) {
+    // prevents page from refreshing
     event.preventDefault();
-
+    // grabs data from inputs
     var inputSelection = $('#selection-input').val();
     type_selected = $('#selection-input').val().replace(" ", "_");
     var inputAddress = $('#pac-input').val();
     var inputAnimal = $('#animal-select').val();
+    // checks to see if the selection address or animal inputs are empty, if they are will pass through all-inputs into the modal, displaying all-inputs modal and returns false so the parameters won't be saved/executed
     if (!inputSelection || !inputAddress || !inputAnimal) {
       alertModal('all-inputs');
       return false;
     };
-
+    // grabs input from form
     var inputDistance = $('#distance-input').val();
+    // Regex "regular expressions" checking to see if each input is an integer
     var numberRegex = /^\d+$/;
     if (!numberRegex.test(inputDistance)) {
       alertModal('number-inputs');
@@ -473,26 +485,49 @@ autocomplete.addListener('place_changed', function() {
   });
 
   function adoptPet() {
+    // setting variables to animal and location fields, using getJSON
     var animal = $('#animal-select').val();
-    $.getJSON('http://api.petfinder.com/pet.find?format=json&animal='+animal+'&location=94112&key=1606f36e9c6ff9a9664c529cba6adff6&callback=?', function(result) {
+    var targetCity = $('#pac-input').val();
+    $.getJSON('http://api.petfinder.com/pet.find?format=json&animal='+animal+'&location='+targetCity+'&key=1606f36e9c6ff9a9664c529cba6adff6&callback=?', function(result) {
+      // console.log(result.petfinder.pets.pet[0].id);
       // console.log(result.petfinder.pets.pet[0].media.photos.photo[3]);
       var pet = result.petfinder.pets.pet;
+      var petID = pet[0].id;
+      // looping through each pet and setting their images with classes, etc
       for (var i = 0; i < pet.length; i++) {
-        // $('#pet-view').prepend(JSON.stringify(result));
-        // console.log(pet[0]);
-        var petDiv = document.createElement('div');
-        petDiv.id = "carousel-image";
-        // petDiv.className += "item";
-        petDiv.className = "item item" + i;
-        var adoptable = pet[i].media.photos.photo[0];
+        var petDiv = $('<div id="carousel-image">')
+        .addClass('item item' + i)
+        var adoptable = pet[i].media.photos.photo[3];
         var petImg =  $('<img>')
         .attr('src', adoptable.$t)
+        .attr('data-id', petID.$t)
         .addClass('img-carousel')
+        .addClass('draggable')
         .addClass('center-block');
+        // appending the petImg(all the images itself) into the petDiv
         $(petDiv).append(petImg);
+        // displays each petDiv to the carousel-inner class
         $('.carousel-inner').append(petDiv);
       }
     });
   }
-
+  function displayShow() {
+    // watching the 'merchants' database
+    database.ref('merchants').on('child_added', function(snapshot){
+      var merchant = snapshot.val();
+      // $('#icon-info').prepend(merchant);
+        // setting show variable to its own div, then appending the snapshot info
+        var show = $('<div id="showBiz">')
+            .append(merchant.name)
+            .append("<br>" + "Address: " + merchant.address)
+            .append("<br>" + "Phone: " + merchant.phone)
+            .append("<br>" + "<a target='_blank' href=" + merchant.resultUrl + ">" + "Webpage" + "</a>");
+      // displaying the show to the #icon-info
+      $('#icon-info').prepend(show);
+    }, function(errorObject) {
+      console.log('read failed: ' + errorObject);
+    })
+  }
+  // calling displayShow to show on the page
+  displayShow();
 });

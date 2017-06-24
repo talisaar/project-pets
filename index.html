@@ -3,6 +3,7 @@
 <html lang="en-us">
 
 <head>
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Luckiest+Guy" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/reset.css">
@@ -15,34 +16,20 @@
   <title>Hacky Tails!</title>
 </head>
 
-<body>
-  <header>
-    <nav class="navbar navbar-inverse">
+<body background="assets/images/PetDoodle.jpg">
+   <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#"><img class="img-responsive" src="assets/images/PetGoofy.jpg">
-          <h1>Hacky Tails!</h1></a>
-        </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
-          <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
-          </ul>
+          <a class="navbar-brand"><img src="assets/images/petgoofy.jpg" class="img-responsive logo">
+          <p class="app-name">Hacky Tails!</p></a>
         </div>
       </div>
     </nav>
-  </header>
   <div class="container">
     <div class="well" id="map">Map</div>
     <div id="legend"></div>
 
-    <div class="well" id="icon-info">Icon Info</div>
+    <div class="well" id="icon-info"></div>
 
     <div class="well" id="user-input">
       <div class="column">
@@ -81,7 +68,7 @@
       </div>
     </div>
 
-    <div class="well" id="search-results">Search Results
+    <div class="well" id="search-results">
       <div id="displayGif"></div>
       <div id="displayAPI"></div>
     </div>
@@ -101,17 +88,15 @@
 
   <div class="container funDisplay">
     <div id="myCarousel" class="carousel slide carousel_size" data-ride="carousel" data-interval="3000" data-pause="hover">
-<!--       <! Indicators  -->
-<!--       <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel" data-slide-to="1"></li>
-        <li data-target="#myCarousel" data-slide-to="2"></li>
-      </ol> -->
 
       <!-- Wrapper for slides -->
       <div class="carousel-inner" role="listbox">
        <div class="item active" id="carousel-image">
           <img class="img-carousel center-block" src="https://s-media-cache-ak0.pinimg.com/564x/57/a7/8a/57a78a156293e681c08a00a3809116a1.jpg" alt=":)">
+          <div class="carousel-caption">
+            <h3>Please Adopt my Friends</h3>
+            <p>They need loving too!</p>
+          </div>
         </div>
       </div>
 
